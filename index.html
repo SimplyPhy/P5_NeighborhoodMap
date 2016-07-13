@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Udacity Maps Course</title>
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		#map {
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<input id="searchBox" type="text" placeholder="Search Box">
+
+	<ul data-bind="foreach: markerList">
+	<li data-bind="text: title"></li>
+		<!--<li data-bind="text: markerList().title"></li>-->
+	</ul>
+
+	<div id="map"></div>
+
+
+	<script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.0.js"></script>
+	<script src="js/maps.js"></script>
+
+	<script async defer src="https://maps.googleapis.com/
+	maps/api/js?libraries=drawing,geometry,places&
+	key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&callback=initMap"></script>
+</body>
+</html>
