@@ -24,7 +24,7 @@ var map,
 	//X markerList().length = 10;
 	//X icon doesn't change on selection
 	//X markerList doesn't update the ul when new markers are added
-	// Need to make marker disappear when item is removed from the obsArray via the remove button
+	//X Need to make marker disappear when item is removed from the obsArray via the remove button
 
 markerList = ko.observableArray([]);
 
@@ -211,6 +211,8 @@ function initMap() {
 			defaultMarkerListener(marker4);
 			defaultMarkerListener(marker5);
 
+			trackLiIndex();
+
 	}
 
 	// console.log(markerList());
@@ -321,14 +323,14 @@ function initMap() {
 	defineDefaultMarkerArray();
 	showListings();
 
-
 } // End initMap()
+
 
 function trackLiIndex() {
 
 	for (var i = 0; i < markerList().length; i++) {
 		$("ul li:eq(" + i + ")").attr("id", i);
-		markerList()[i].index = i;
+		markerList()[i].id = i;
 	}
 	console.log(markerList());
 }
@@ -336,10 +338,11 @@ function trackLiIndex() {
 
 // Knockout JS :`(
 function removeButton(marker) {
+	var thisId = marker.id;
+
+	marker.setMap(null);
 	markerList.remove(marker);
 	trackLiIndex();
-	// markerList()[?].setMap(null);  <--- needs a way to find which array index to setMap to
-	console.log(markerList());
 }
 
 var viewModel = {
@@ -363,5 +366,5 @@ var viewModel = {
 };
 
 ko.applyBindings(viewModel);
-trackLiIndex();
-// new Marker("Chalfont", "{lat: 40.31, lng: -75.15}");
+
+
