@@ -1,67 +1,32 @@
 var map,
 	markers = [],
 	id = [],
+	currentLi = [],
 	infoWindow,
 	search,
 	searchBox,
+	removeMarker,
 	defaultIcon,
 	highlightedIcon,
 	markerList,
 	styleArray;
 
-	// Issues:
+	// TO-DO:
+	//X Add remove location button next to each list item
+	// Make list items clickable/selectable
+	// Add wikimedia content to infoWindows for each location selected
+	// Create dynamic side-bar containing the list and text input
+	// Add touch functionality
+	// make sure ui is responsive
+	// Add error handling for API AJAX requests
+
+	// Bugs:
 	//X markerList().length = 10;
-	// icon doesn't change on selection
+	//X icon doesn't change on selection
+	//X markerList doesn't update the ul when new markers are added
+	// Need to make marker disappear when item is removed from the obsArray via the remove button
 
-markerList = ko.observableArray([
-
-	{
-		title: 'Doylestown Starbucks',
-		position: {lat: 40.310323, lng: -75.130746},
-
-		map: map,
-		icon: defaultIcon,
-		// animation: google.maps.Animation.DROP,
-		id: ko.observable(0),
-		colorId: false
-	}, {
-		title: 'Central Bucks Family YMCA',
-		position: {lat: 40.303162, lng: -75.140643},
-
-		map: map,
-		icon: defaultIcon,
-		// animation: google.maps.Animation.DROP,
-		id: ko.observable(1),
-		colorId: false
-	}, {
-		title: 'Peace Valley Park',
-		position: {lat: 40.329817, lng: -75.192421},
-
-		map: map,
-		icon: defaultIcon,
-		// animation: google.maps.Animation.DROP,
-		id: ko.observable(2),
-		colorId: false
-	}, {
-		title: 'California Tortilla',
-		position: {lat: 40.304436, lng: -75.129210},
-
-		map: map,
-		icon: defaultIcon,
-		// animation: google.maps.Animation.DROP,
-		id: ko.observable(3),
-		colorId: false
-	}, {
-		title: 'Five Ponds Golf Course',
-		position: {lat: 40.219718, lng: -75.112137},
-
-		map: map,
-		icon: defaultIcon,
-		// animation: google.maps.Animation.DROP,
-		id: ko.observable(4),
-		colorId: false
-	}]
-);
+markerList = ko.observableArray([]);
 
 styleArray =[
     {
@@ -227,20 +192,25 @@ function initMap() {
 	// original marker auto-populate based on markerList() data
 
 	function defineDefaultMarkerArray(){
-		for (var i = 0; i < markerList().length; i++) {
 
-			markerList()[i].map = map;
-			markerList()[i].animation = google.maps.Animation.DROP;
+			var marker1 = new viewModel.Marker("Doylestown Starbucks", {lat: 40.310323, lng: -75.130746});
+			var marker2 = new viewModel.Marker("Central Bucks Family YMCA", {lat: 40.303162, lng: -75.140643});
+			var marker3 = new viewModel.Marker("Peace Valley Park", {lat: 40.329817, lng: -75.192421});
+			var marker4 = new viewModel.Marker("California Tortilla", {lat: 40.304436, lng: -75.129210});
+			var marker5 = new viewModel.Marker("Five Ponds Golf Course", {lat: 40.219718, lng: -75.112137});
 
-			var value = markerList()[i];
-			var marker = new google.maps.Marker(value);
+			markerList.push(marker1);
+			markerList.push(marker2);
+			markerList.push(marker3);
+			markerList.push(marker4);
+			markerList.push(marker5);
 
-			markerList()[i] = marker;
-			markerList()[i].setIcon(defaultIcon);
+			defaultMarkerListener(marker1);
+			defaultMarkerListener(marker2);
+			defaultMarkerListener(marker3);
+			defaultMarkerListener(marker4);
+			defaultMarkerListener(marker5);
 
-			console.log(markerList().length);
-			defaultMarkerListener(marker);
-		}
 	}
 
 	// console.log(markerList());
@@ -256,7 +226,7 @@ function initMap() {
 
 			this.setIcon(highlightedIcon);
 			this.colorId = true;
-			console.log(markerList());
+			// console.log(markerList());
 		});
 	}
 
@@ -304,15 +274,31 @@ function initMap() {
 			// 	colorId: true
 			// });
 
-			var marker = new Marker(place.name, place.geometry.location, place.length);
+			var marker = new viewModel.Marker(place.name, place.geometry.location);
 			// console.log(marker);
 
-			markerList().push(marker);
-			// markers.push(marker);  --> causes new markers to not change color when deselected
+			markerList.push(marker);
 
 			defaultMarkerListener(marker);
 		});
+		trackLiIndex();
 	});
+
+	// removeMarker = document.getElementsByClassName("removeMarker");
+	// console.log(removeMarker);
+
+	// function setRemoveListeners () {
+	// 	var i = 0;
+	// 	removeMarker.foreach(function() {
+	// 		removeMaker[i].addEventListener( "click", function(){
+
+	// 		});
+	// 		i++;
+	// 	});
+	// }
+	// removeMarker.addEventListener('click', function(){
+	// 	console.log("happy");
+	// });
 
 	// function hideListings() {
 	// 	for (var i = 0; i < markers.length; i++) {
@@ -336,11 +322,29 @@ function initMap() {
 	showListings();
 
 
-
 } // End initMap()
 
+function trackLiIndex() {
+
+	for (var i = 0; i < markerList().length; i++) {
+		$("ul li:eq(" + i + ")").attr("id", i);
+		markerList()[i].index = i;
+	}
+	console.log(markerList());
+}
+
+
 // Knockout JS :`(
-function Marker(title, location, id) {
+function removeButton(marker) {
+	markerList.remove(marker);
+	trackLiIndex();
+	// markerList()[?].setMap(null);  <--- needs a way to find which array index to setMap to
+	console.log(markerList());
+}
+
+var viewModel = {
+
+	Marker: function(title, location) {
 	var self = this;
 
 	var marker =  new google.maps.Marker({
@@ -349,27 +353,15 @@ function Marker(title, location, id) {
 		position: location,
 		icon: defaultIcon,
 		animation: google.maps.Animation.DROP,
-		id: ko.observable(id),
 		colorId: false
 	});
-	console.log(markerList().length);
+	// console.log(markerList().length);
 
 	return marker;
+	}
 
-}
+};
 
-function viewModel() {
-	var self = this;
-
-	// self.createMarker = function(title, location, id){
-	// 	var name = title;
-	// 	var latlng = location;
-	// 	var newid = id;
-
-	// 	self.markerList.push(new Marker(name, latlng, newid));
-	// };
-}
-
-ko.applyBindings(new markerList());
-
+ko.applyBindings(viewModel);
+trackLiIndex();
 // new Marker("Chalfont", "{lat: 40.31, lng: -75.15}");
