@@ -15,7 +15,7 @@ var map,
 	// TO-DO:
 	//X Add remove location button next to each list item
 	//X Make list items clickable/selectable
-	// Add foursquare content to infoWindows for each location selected
+	//X Add foursquare content to infoWindows for each location selected
 	// Create dynamic side-bar containing the list and text input
 	// Add touch functionality
 	// make sure ui is responsive
@@ -29,12 +29,9 @@ var map,
 	// map doesn't reposition south all the way when marker is selected south of viewport (minor)
 
 
-	// Current task: make infoWindows contain information about, a link to, and a photo of the selected item
+	// Current task:
 
-	// Make the infoWindow contain a div that contains the markerList()[current].title and image
-	//
-	// Add an eventListener onto the div for a new tab to open with the url of the marker
-	//
+
 
 markerList = ko.observableArray([]);
 
@@ -156,14 +153,6 @@ styleArray =[
     }
 ];
 
-	// var marker = new google.maps.Marker({
-	// 		position: position,
-	// 		title: title,
-	// 		icon: defaultIcon,
-	// 		animation: google.maps.Animation.DROP,
-	// 		id: i,
-	// 		colorId: false
-	// 	});
 
 function initMap() {
 
@@ -185,22 +174,10 @@ function initMap() {
 		searchBox.setBounds(map.getBounds());
 	});
 
-	// var contentString = '<div id="content">' +
-	// 	'<div id="siteNotice">' +
-	// 	'</div>' +
-	// 	'<h2 id="firstHeading" class="firstHeading">Starbucks</h1>' +
-	// 	'<p>The <b>Doylestown Starbucks</b> is super, thanks for asking!</p>' +
-	// 	'</div>';
-
-	// var infowindow = new google.maps.InfoWindow({
-	// 	content: contentString
-	// });
-
 	defaultIcon = makeMarkerIcon('B590D4');
 	highlightedIcon = makeMarkerIcon('FFFA73');
 
-	// original marker auto-populate based on markerList() data
-
+	// Generates default markers on the google map
 	function defineDefaultMarkerArray(){
 
 			var marker1 = new viewModel.Marker("Doylestown Starbucks", {lat: 40.310323, lng: -75.130746});
@@ -223,35 +200,28 @@ function initMap() {
 
 			trackLiIndex();
 
-			// console.log(marker1);
-
 	}
 
-	// console.log(markerList());
 	function defaultMarkerListener(marker) {
 		marker.addListener('click', function() {
 			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 
 			for(var i = 0; i < markerList().length; i++) {
-				// console.log(markerList()[i]);
+
 				markerList()[i].setIcon(defaultIcon);
 				markerList()[i].colorId = false;
 			}
 
 			this.setIcon(highlightedIcon);
 			this.colorId = true;
-			// console.log(markerList());
+
 		});
 	}
 
 	// this creates the infoWindow
-	//>> This is where foursquare data will go
 	function populateInfoWindow(marker, infowindow, image, url) {		// Order of operations can be optimized
         if (infowindow.marker != marker) {
 			infowindow.marker = marker;
-
-			console.log(image);
-			console.log(url);
 
 			var contentDiv = 	'<div class="infoWindow">';
 
@@ -275,16 +245,10 @@ function initMap() {
 								'</div>';
 			}
 
-			console.log(contentDiv);
-
 			infowindow.setContent(
 
 				contentDiv
 
-				// '<div class="infoWindow">' +
-				// 	'<h3>' + marker.title + '</h3>' +
-				// 	'<img alt= "' + marker.title + 'src="' + image + '"></img>' +
-				// '</div>'
 
 			);
 
@@ -316,18 +280,7 @@ function initMap() {
 
 		places.forEach(function(place) {
 
-			// var marker = new google.maps.Marker({
-			// 	map: map,
-			// 	position: place.geometry.location,
-			// 	title: place.name,
-			// 	icon: defaultIcon,
-			// 	animation: google.maps.Animation.DROP,
-			// 	id: places.length,
-			// 	colorId: true
-			// });
-
 			var marker = new viewModel.Marker(place.name, place.geometry.location);
-			// console.log(marker);
 
 			markerList.push(marker);
 
@@ -374,10 +327,6 @@ function initMap() {
 				marker.setIcon(highlightedIcon);
 				marker.colorId = true;
 
-				console.log(markerList()[0].FS_url);
-				console.log(markerList()[0].FS_url_image);
-
-				// console.log(marker);
 			});
 
 	}
@@ -385,20 +334,6 @@ function initMap() {
 	defineDefaultMarkerArray();
 	showListings();
 	listItemSelect();
-
-	// The foursquareUrl needs to be processed through a for [markerList().length] loop, updating the ll and query
-	// end points each loop.  During each cycle, the ajax call must be set with each iteration of foursquareUrl,
-	// and the ajax call needs to call two functions, with arguments for foursquarePhotoUrl and foursquareUrl.
-	// Those functions need to return the value of those variables, and then have them called into the
-	// populateinfowindow function.
-
-	// Update: The foursquareUrl and foursquarePhoto should be stored in the markerList as object properties.  This
-	// way, they'll be easily called on, and will be created/destroyed with the markers.
-
-
-	// function foursquareImage(foursquarePhotoUrl) {
-	// 	return foursquarePhotoUrl;
-	// }
 
 	var thisLat,
 		thisLng,
@@ -408,7 +343,6 @@ function initMap() {
 	function setFoursquareUrl(length) {
 
 		var i = markerList().length - 1;
-		// console.log(length);
 
 		if (length) {
 
@@ -419,7 +353,6 @@ function initMap() {
 							"&limit=1" +
 							"&radius=1000" +
 							"&intent=checkin" +
-							// "&ll=40.219718,-75.112137" + // This will need to be markerList.position ~ as of now, wrong store selected
 							"&ll=" + markerList()[i].getPosition().lat() + "," + markerList()[i].getPosition().lng() +
 							"&query=" + markerList()[i].title;  // This will need to be markerList.title
 
@@ -436,19 +369,15 @@ function initMap() {
 							"&limit=1" +
 							"&radius=1000" +
 							"&intent=checkin" +
-							// "&ll=40.219718,-75.112137" + // This will need to be markerList.position ~ as of now, wrong store selected
 							"&ll=" + markerList()[j].getPosition().lat() + "," + markerList()[j].getPosition().lng() +
-							"&query=" + markerList()[j].title;  // This will need to be markerList.title
+							"&query=" + markerList()[j].title;
 
-							// console.log(markerList()[j].title);
 				ajax(foursquareUrl, j);
-				// console.log(foursquareUrl);
 			}
 		}
 
 	}
 
-	// var foursquarePhotoUrl = "https://api.foursquare.com/v2/venues/";
 
 	function ajax(FS_url, index) {
 
@@ -457,8 +386,7 @@ function initMap() {
 		    dataType: "jsonp"
 
 		}).done(function(response) {
-			// console.log(response);
-		    // console.log(response.response.venues[0].id);
+
 		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
 		    						response.response.venues[0].id +
 		    						"/photos" +
@@ -469,8 +397,7 @@ function initMap() {
 
 		    var webUrl = response.response.venues[0].url;
 		    markerList()[index].FS_url = webUrl;
-		    // console.log(webUrl);
-		    // console.log(foursquarePhotoUrl);
+
 
 		    $.ajax({
 		    	url: foursquarePhotoUrl,
@@ -478,15 +405,14 @@ function initMap() {
 
 		    }).done(function(photoResponse) {
 
-		    	// console.log(photoResponse);
-		    	var photo = photoResponse.response.photos.items[0].prefix +
-		    			"125x125" +
-		    			photoResponse.response.photos.items[0].suffix;
+		    	if(photoResponse.response.photos.items.length === 1) {
+			    	var photo = photoResponse.response.photos.items[0].prefix +
+			    				"125x125" +
+			    				photoResponse.response.photos.items[0].suffix;
 
-		    	markerList()[index].FS_url_image = photo;
-		    	// console.log(photo);
+		    		markerList()[index].FS_url_image = photo;
+		    	}
 
-		    	// console.log(photo);
 
 		    }).fail(function() {
 		    	// notify user
@@ -509,7 +435,6 @@ function trackLiIndex() {
 		$("ul li:eq(" + i + ")").attr("id", i);
 		markerList()[i].id = i;
 	}
-	// console.log(markerList());
 }
 
 // Knockout JS :`(
@@ -534,7 +459,6 @@ var viewModel = {
 		animation: google.maps.Animation.DROP,
 		colorId: false
 	});
-	// console.log(markerList().length);
 
 	return marker;
 	}
