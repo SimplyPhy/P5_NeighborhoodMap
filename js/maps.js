@@ -2,6 +2,7 @@ var map,
 	markers = [],
 	id = [],
 	currentLi = [],
+	wikiUrl,
 	infoWindow,
 	search,
 	searchBox,
@@ -14,7 +15,7 @@ var map,
 	// TO-DO:
 	//X Add remove location button next to each list item
 	//X Make list items clickable/selectable
-	// Add wikimedia content to infoWindows for each location selected
+	// Add foursquare content to infoWindows for each location selected
 	// Create dynamic side-bar containing the list and text input
 	// Add touch functionality
 	// make sure ui is responsive
@@ -25,6 +26,15 @@ var map,
 	//X icon doesn't change on selection
 	//X markerList doesn't update the ul when new markers are added
 	//X Need to make marker disappear when item is removed from the obsArray via the remove button
+	// map doesn't reposition south all the way when marker is selected south of viewport (minor)
+
+
+	// Current task: make infoWindows contain information about, a link to, and a photo of the selected item
+
+	// Make the infoWindow contain a div that contains the markerList()[current].title and image
+	//
+	// Add an eventListener onto the div for a new tab to open with the url of the marker
+	//
 
 markerList = ko.observableArray([]);
 
@@ -213,12 +223,14 @@ function initMap() {
 
 			trackLiIndex();
 
+			// console.log(marker1);
+
 	}
 
 	// console.log(markerList());
 	function defaultMarkerListener(marker) {
 		marker.addListener('click', function() {
-			populateInfoWindow(this, infoWindow);
+			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 
 			for(var i = 0; i < markerList().length; i++) {
 				// console.log(markerList()[i]);
@@ -233,11 +245,49 @@ function initMap() {
 	}
 
 	// this creates the infoWindow
-	//>> This is where wikimedia data will go
-	function populateInfoWindow(marker, infowindow) {
+	//>> This is where foursquare data will go
+	function populateInfoWindow(marker, infowindow, image, url) {		// Order of operations can be optimized
         if (infowindow.marker != marker) {
 			infowindow.marker = marker;
-			infowindow.setContent('<div>' + marker.title + '</div>');
+
+			console.log(image);
+			console.log(url);
+
+			var contentDiv = 	'<div class="infoWindow">';
+
+			if(image && url) {
+
+				contentDiv +=		'<h3><a href="' + url + '">' + marker.title + '</a></h3>' +
+									'<a href="' + url + '">' + '<img width="125" alt="' + marker.title + '"src="' + image + '"></img></a>' +
+								'</div>';
+			} else if (image && !url) {
+
+				contentDiv +=		'<h3>' + marker.title + '</h3>' +
+									'<img width="125" alt="' + marker.title + '"src="' + image + '"></img>' +
+								'</div>';
+			} else if (!image && url) {
+
+				contentDiv +=		'<a href="' + url + '"><h3>' + marker.title + '</h3></a>' +
+								'</div>';
+			} else {
+
+				contentDiv += 		'<h3>' + marker.title + '</h3>' +
+								'</div>';
+			}
+
+			console.log(contentDiv);
+
+			infowindow.setContent(
+
+				contentDiv
+
+				// '<div class="infoWindow">' +
+				// 	'<h3>' + marker.title + '</h3>' +
+				// 	'<img alt= "' + marker.title + 'src="' + image + '"></img>' +
+				// '</div>'
+
+			);
+
 			infowindow.open(map, marker);
 			infowindow.addListener('closeclick', function() {
 				infowindow.marker = null;
@@ -285,6 +335,7 @@ function initMap() {
 			listItemSelect();
 		});
 		trackLiIndex();
+		setFoursquareUrl(markerList().length);
 	});
 
 	// function hideListings() {
@@ -312,7 +363,7 @@ function initMap() {
 				var id = item.target.id;
 				var marker = markerList()[id];
 
-				populateInfoWindow(marker, infoWindow);
+				populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
 
 				for(var i = 0; i < markerList().length; i++) {
 
@@ -323,6 +374,9 @@ function initMap() {
 				marker.setIcon(highlightedIcon);
 				marker.colorId = true;
 
+				console.log(markerList()[0].FS_url);
+				console.log(markerList()[0].FS_url_image);
+
 				// console.log(marker);
 			});
 
@@ -331,6 +385,120 @@ function initMap() {
 	defineDefaultMarkerArray();
 	showListings();
 	listItemSelect();
+
+	// The foursquareUrl needs to be processed through a for [markerList().length] loop, updating the ll and query
+	// end points each loop.  During each cycle, the ajax call must be set with each iteration of foursquareUrl,
+	// and the ajax call needs to call two functions, with arguments for foursquarePhotoUrl and foursquareUrl.
+	// Those functions need to return the value of those variables, and then have them called into the
+	// populateinfowindow function.
+
+	// Update: The foursquareUrl and foursquarePhoto should be stored in the markerList as object properties.  This
+	// way, they'll be easily called on, and will be created/destroyed with the markers.
+
+
+	// function foursquareImage(foursquarePhotoUrl) {
+	// 	return foursquarePhotoUrl;
+	// }
+
+	var thisLat,
+		thisLng,
+		thisName,
+		foursquareUrl;
+
+	function setFoursquareUrl(length) {
+
+		var i = markerList().length - 1;
+		// console.log(length);
+
+		if (length) {
+
+			foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
+			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			// These might not work. Replace website URL
+			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
+							"&v=20130815" +
+							"&limit=1" +
+							"&radius=1000" +
+							"&intent=checkin" +
+							// "&ll=40.219718,-75.112137" + // This will need to be markerList.position ~ as of now, wrong store selected
+							"&ll=" + markerList()[i].getPosition().lat() + "," + markerList()[i].getPosition().lng() +
+							"&query=" + markerList()[i].title;  // This will need to be markerList.title
+
+			ajax(foursquareUrl, i);
+
+		} else {
+
+			for (var j = 0; j <= i; j++) {
+
+				foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
+			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			// These might not work. Replace website URL
+			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
+							"&v=20130815" +
+							"&limit=1" +
+							"&radius=1000" +
+							"&intent=checkin" +
+							// "&ll=40.219718,-75.112137" + // This will need to be markerList.position ~ as of now, wrong store selected
+							"&ll=" + markerList()[j].getPosition().lat() + "," + markerList()[j].getPosition().lng() +
+							"&query=" + markerList()[j].title;  // This will need to be markerList.title
+
+							// console.log(markerList()[j].title);
+				ajax(foursquareUrl, j);
+				// console.log(foursquareUrl);
+			}
+		}
+
+	}
+
+	// var foursquarePhotoUrl = "https://api.foursquare.com/v2/venues/";
+
+	function ajax(FS_url, index) {
+
+		$.ajax({
+		    url: FS_url,
+		    dataType: "jsonp"
+
+		}).done(function(response) {
+			// console.log(response);
+		    // console.log(response.response.venues[0].id);
+		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
+		    						response.response.venues[0].id +
+		    						"/photos" +
+		    						"?v=20130815" +
+		    						"&limit=1" +
+		    						"&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
+		    						"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
+
+		    var webUrl = response.response.venues[0].url;
+		    markerList()[index].FS_url = webUrl;
+		    // console.log(webUrl);
+		    // console.log(foursquarePhotoUrl);
+
+		    $.ajax({
+		    	url: foursquarePhotoUrl,
+		    	dataType: "jsonp"
+
+		    }).done(function(photoResponse) {
+
+		    	// console.log(photoResponse);
+		    	var photo = photoResponse.response.photos.items[0].prefix +
+		    			"125x125" +
+		    			photoResponse.response.photos.items[0].suffix;
+
+		    	markerList()[index].FS_url_image = photo;
+		    	// console.log(photo);
+
+		    	// console.log(photo);
+
+		    }).fail(function() {
+		    	// notify user
+		    });
+
+		}).fail(function() {
+		    // notify user
+		});
+	} // add timeout
+
+
+	setFoursquareUrl();
 
 } // End initMap()
 
@@ -343,9 +511,6 @@ function trackLiIndex() {
 	}
 	// console.log(markerList());
 }
-
-// function addlistListeners
-
 
 // Knockout JS :`(
 function removeButton(marker) {
