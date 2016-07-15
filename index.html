@@ -18,7 +18,7 @@
 	<input id="searchBox" type="text" placeholder="Search Box">
 
 	<ul data-bind="foreach: markerList" id="locations">
-		<li data-bind="text: title"></li>
+		<li data-bind="text: title" class="li"></li>
 		<button type="button" data-bind="click: removeButton" class="removeMarker">Remove</button>
 	</ul>
 

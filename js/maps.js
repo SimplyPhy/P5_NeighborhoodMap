@@ -13,7 +13,7 @@ var map,
 
 	// TO-DO:
 	//X Add remove location button next to each list item
-	// Make list items clickable/selectable
+	//X Make list items clickable/selectable
 	// Add wikimedia content to infoWindows for each location selected
 	// Create dynamic side-bar containing the list and text input
 	// Add touch functionality
@@ -282,25 +282,10 @@ function initMap() {
 			markerList.push(marker);
 
 			defaultMarkerListener(marker);
+			listItemSelect();
 		});
 		trackLiIndex();
 	});
-
-	// removeMarker = document.getElementsByClassName("removeMarker");
-	// console.log(removeMarker);
-
-	// function setRemoveListeners () {
-	// 	var i = 0;
-	// 	removeMarker.foreach(function() {
-	// 		removeMaker[i].addEventListener( "click", function(){
-
-	// 		});
-	// 		i++;
-	// 	});
-	// }
-	// removeMarker.addEventListener('click', function(){
-	// 	console.log("happy");
-	// });
 
 	// function hideListings() {
 	// 	for (var i = 0; i < markers.length; i++) {
@@ -320,8 +305,32 @@ function initMap() {
 		return markerImage;
 	}
 
+
+	function listItemSelect() {
+
+			$("li").click(function(item) {
+				var id = item.target.id;
+				var marker = markerList()[id];
+
+				populateInfoWindow(marker, infoWindow);
+
+				for(var i = 0; i < markerList().length; i++) {
+
+					markerList()[i].setIcon(defaultIcon);
+					markerList()[i].colorId = false;
+				}
+
+				marker.setIcon(highlightedIcon);
+				marker.colorId = true;
+
+				// console.log(marker);
+			});
+
+	}
+
 	defineDefaultMarkerArray();
 	showListings();
+	listItemSelect();
 
 } // End initMap()
 
@@ -332,8 +341,10 @@ function trackLiIndex() {
 		$("ul li:eq(" + i + ")").attr("id", i);
 		markerList()[i].id = i;
 	}
-	console.log(markerList());
+	// console.log(markerList());
 }
+
+// function addlistListeners
 
 
 // Knockout JS :`(
