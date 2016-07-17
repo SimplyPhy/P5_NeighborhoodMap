@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Udacity Maps Course</title>
+	<link rel="stylesheet" href="css/styles.css">
 	<style>
 		html, body {
 			height: 100%;
@@ -11,24 +12,32 @@
 		}
 		#map {
 			height: 100%;
+			width: 80%;
+			float: right;
 		}
 	</style>
 </head>
 <body>
-	<input id="searchBox" type="text" placeholder="Search Box">
 
-	<ul data-bind="foreach: markerList" id="locations">
-		<li data-bind="text: title" class="li"></li>
-		<button type="button" data-bind="click: removeButton" class="removeMarker">Remove</button>
-	</ul>
+	<div id="sidebar" class="sidebar" data-bind="">
+		<input id="searchBox" type="text" placeholder="Search Box">
+
+		<ul data-bind="foreach: markerList" id="locations">
+			<li data-bind="text: title" class="li"></li>
+			<button type="button" data-bind="click: removeButton" class="removeMarker">Remove</button>
+		</ul>
+	</div>
+	<div id="top_bar">
+		<img src="images/nav_icon.png" data-bind="toggleClick: navToggleBool" alt="Nav Button" class="nav_button" />
+	</div>
 
 	<div id="map"></div>
 
 
-	<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
 
 	<script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.0.js"></script>
-	<script src="js/maps.js"></script> <!-- test speed between v1 and v2 -->
+	<script src="js/maps.js"></script>
 
 	<script async defer src="https://maps.googleapis.com/
 	maps/api/js?libraries=drawing,geometry,places&

@@ -29,7 +29,9 @@ var map,
 	// map doesn't reposition south all the way when marker is selected south of viewport (minor)
 
 
-	// Current task:
+	// Current task: using jquery .animate to animate side bar.  Use custom bindings with knockout.js to steal
+	// the jquery .animate for use with the sidebar, with a click listener on the button (also, ko.js).
+	// (need to add filter button next to/near search box). I probably also have to refactor into MVVM.
 
 
 
@@ -167,7 +169,7 @@ function initMap() {
 
 	search = document.getElementById("searchBox");
 	searchBox = new google.maps.places.SearchBox(search);
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(search);
+	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(search); // Removed searchbox from google map
 
 	// Focus SearchBox results on the current map viewport
 	map.addListener('bounds_changed', function() {
@@ -180,6 +182,7 @@ function initMap() {
 	// Generates default markers on the google map
 	function defineDefaultMarkerArray(){
 
+			// Hard coded initial Google Map markers
 			var marker1 = new viewModel.Marker("Doylestown Starbucks", {lat: 40.310323, lng: -75.130746});
 			var marker2 = new viewModel.Marker("Central Bucks Family YMCA", {lat: 40.303162, lng: -75.140643});
 			var marker3 = new viewModel.Marker("Peace Valley Park", {lat: 40.329817, lng: -75.192421});
@@ -203,6 +206,7 @@ function initMap() {
 	}
 
 	function defaultMarkerListener(marker) {
+
 		marker.addListener('click', function() {
 			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 
@@ -214,34 +218,28 @@ function initMap() {
 
 			this.setIcon(highlightedIcon);
 			this.colorId = true;
-
 		});
 	}
 
 	// this creates the infoWindow
-	function populateInfoWindow(marker, infowindow, image, url) {		// Order of operations can be optimized
+	function populateInfoWindow(marker, infowindow, image, url) {
         if (infowindow.marker != marker) {
 			infowindow.marker = marker;
 
 			var contentDiv = 	'<div class="infoWindow">';
-
 			if(image && url) {
-
-				contentDiv +=		'<h3><a href="' + url + '">' + marker.title + '</a></h3>' +
-									'<a href="' + url + '">' + '<img width="125" alt="' + marker.title + '"src="' + image + '"></img></a>' +
+				contentDiv +=		'<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
+									'<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
 								'</div>';
 			} else if (image && !url) {
-
-				contentDiv +=		'<h3>' + marker.title + '</h3>' +
-									'<img width="125" alt="' + marker.title + '"src="' + image + '"></img>' +
+				contentDiv +=		'<h3>'+ marker.title +'</h3>' +
+									'<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
 								'</div>';
 			} else if (!image && url) {
-
-				contentDiv +=		'<a href="' + url + '"><h3>' + marker.title + '</h3></a>' +
+				contentDiv +=		'<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
 								'</div>';
 			} else {
-
-				contentDiv += 		'<h3>' + marker.title + '</h3>' +
+				contentDiv += 		'<h3>'+ marker.title +'</h3>' +
 								'</div>';
 			}
 
@@ -388,12 +386,12 @@ function initMap() {
 		}).done(function(response) {
 
 		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
-		    						response.response.venues[0].id +
-		    						"/photos" +
-		    						"?v=20130815" +
-		    						"&limit=1" +
-		    						"&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
-		    						"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
+			    						response.response.venues[0].id +
+			    						"/photos" +
+			    						"?v=20130815" +
+			    						"&limit=1" +
+			    						"&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
+			    						"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
 
 		    var webUrl = response.response.venues[0].url;
 		    markerList()[index].FS_url = webUrl;
@@ -437,7 +435,47 @@ function trackLiIndex() {
 	}
 }
 
-// Knockout JS :`(
+
+
+// UI (not KO.js)
+// var visible = true;
+
+// $(".nav_button").click(function() {
+// 	if (visible) {
+// 		$("#sidebar").animate({
+// 			left: "-20vw",
+// 		}, 350);
+// 		visible = false;
+// 	} else {
+// 		$("#sidebar").animate({
+// 			left: "0vw",
+// 		}, 350);
+// 		visible = true;
+// 	}
+// });
+
+
+// Knockout JS
+
+// UI
+ko.bindingHandlers.toggleClick = {
+	init: function (element, valueAccessor) {
+		var value = viewModel.navToggleBool();
+		var shift = -20;
+
+		ko.utils.registerEventHandler(element, "click", function () {
+			$("#sidebar").animate({
+					left: shift + "vw",
+				}, 350);
+			viewModel.navToggleBool(!viewModel.navToggleBool());
+
+			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
+			else 								{ shift = -20; }
+		});
+	}
+};
+
+
 function removeButton(marker) {
 	var thisId = marker.id;
 
@@ -447,6 +485,7 @@ function removeButton(marker) {
 }
 
 var viewModel = {
+	navToggleBool: ko.observable(true),
 
 	Marker: function(title, location) {
 	var self = this;
@@ -462,6 +501,8 @@ var viewModel = {
 
 	return marker;
 	}
+
+
 
 };
 
