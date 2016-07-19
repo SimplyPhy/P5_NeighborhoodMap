@@ -329,17 +329,11 @@ function initMap() {
 			center: centerPoint,
 			radius: filterRadius.value * 1609.34
 		});
-		console.log("happy?");
 
-		// console.log(markerList()[0].latLng);
+		var currentLength = markerList().length;
+		var filterRemoveArray = [];
 
-		// google.maps.geometry.poly.containsLocation(markerList()[i].position, filterArray[0]);
-
-		// var markerPosition = markerList()[0].getPosition();
-
-		// console.log(markerPosition);
-
-		for (var i = 0; i < markerList().length; i++) {
+		for (var i = 0; i < currentLength; i++) {
 
 
 			// var positionObj = {
@@ -347,21 +341,23 @@ function initMap() {
 			// 	lng: markerList()[i].latLng.lng
 			// };
 
-			// var position = markerList()[i].latLng.lat + ", " + markerList()[i].latLng.lng;
 
-			markerList()[i].latLng = new google.maps.LatLng({ lat: markerList()[i].customLatLng.lat, lng: markerList()[i].customLatLng.lng});
-			console.log(markerList()[0].LatLng);
+			var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
 
-			// var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
-			// if (distance > filterArray[0].radius) {
-			if (google.maps.geometry.poly.containsLocation(markerList()[i].latLng, filterArray[0])) {
+			if (distance > filterArray[0].radius) {
 				markerList()[i].setMap(null);
-				removeButton(markerList()[i]);
-
+				filterRemoveArray.push(markerList()[i]);
 			}
 		}
 
+		// The following removes modifies the underlying
+		var currentFilteredLength = filterRemoveArray.length;
 
+		for (var ii = 0; ii < currentFilteredLength; ii++) {
+			removeButton(filterRemoveArray[ii]);
+		}
+
+		filterRemoveArray = [];
 
 	}
 
@@ -391,9 +387,9 @@ function initMap() {
 				}, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
 						map.setCenter(results[0].geometry.location);
-						var centerSpot = results[0].geometry.location;
-						applyFilter(centerSpot);
-						map.setZoom(13);
+						var centerPoint = results[0].geometry.location;
+						applyFilter(centerPoint);
+						map.setZoom(10);
 					} else {
 						window.alert('We could not find that location - try entering a more' +
 				    	' specific place.');
