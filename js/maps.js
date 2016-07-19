@@ -2,6 +2,7 @@ var map,
 	markers = [],
 	id = [],
 	currentLi = [],
+	filterArray = [],
 	wikiUrl,
 	infoWindow,
 	search,
@@ -16,7 +17,7 @@ var map,
 	//X Add remove location button next to each list item
 	//X Make list items clickable/selectable
 	//X Add foursquare content to infoWindows for each location selected
-	// Create dynamic side-bar containing the list and text input
+	//X Create dynamic side-bar containing the list and text input
 	// Add touch functionality
 	// make sure ui is responsive
 	// Add error handling for API AJAX requests
@@ -29,13 +30,12 @@ var map,
 	// map doesn't reposition south all the way when marker is selected south of viewport (minor)
 
 
-	// Current task: using jquery .animate to animate side bar.  Use custom bindings with knockout.js to steal
-	// the jquery .animate for use with the sidebar, with a click listener on the button (also, ko.js).
-	// (need to add filter button next to/near search box). I probably also have to refactor into MVVM.
+	// Current task:
 
 
 
 markerList = ko.observableArray([]);
+var filterSpot = null;
 
 styleArray =[
     {
@@ -167,6 +167,9 @@ function initMap() {
 
 	infoWindow = new google.maps.InfoWindow();
 
+	filter = document.getElementById("filterBox");
+	filterBox = new google.maps.places.SearchBox(filter);
+
 	search = document.getElementById("searchBox");
 	searchBox = new google.maps.places.SearchBox(search);
 	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(search); // Removed searchbox from google map
@@ -174,6 +177,7 @@ function initMap() {
 	// Focus SearchBox results on the current map viewport
 	map.addListener('bounds_changed', function() {
 		searchBox.setBounds(map.getBounds());
+		filterBox.setBounds(map.getBounds());
 	});
 
 	defaultIcon = makeMarkerIcon('B590D4');
@@ -269,6 +273,100 @@ function initMap() {
 		map.fitBounds(bounds);
 	}
 
+	var filterRadius = document.getElementById("filterRadius");
+
+	var drawingManager = new google.maps.drawing.DrawingManager({
+		drawingMode: google.maps.drawing.OverlayType.CIRCLE,
+		drawingControl: false,
+    }); // this is the drawing initialization
+
+	/* **************************************** */
+	// https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&latlng=40.3,-75.1
+
+	function applyFilter(centerPoint) {
+
+		if (filterArray[0]) {
+			filterArray[0].setMap(null);
+		}
+
+		console.log(filterSpot);
+
+		// filterSpot = event.overlay;
+
+		filterArray[0] = new google.maps.Circle({
+			strokeColor: '#D190D4',
+			strokeOpacity: 0.6,
+			strokeWeight: 2,
+			fillColor: '#D190D4',
+			fillOpacity: 0.15,
+			map: map,
+			center: centerPoint,
+			radius: filterRadius.value * 1609.34
+		});
+		console.log("happy?");
+
+
+
+
+	}
+
+	function removeFilterSpot() {
+		filterSpot.setMap(null);
+	}
+
+	// function filterMap() {
+	// 	for (var i = 0; i < markerList().length; i++) {
+	// 		if (google.maps.geometry.poly.containsLocation(markerList[i].position, polygon)) {
+	// 			markerList[i].setMap(map);
+	// 		} else {
+	// 			markerList[i].setMap(null);
+	// 		}
+	// 	}
+	// }
+
+
+	$("#filterBox").keypress(function (e) {
+		if (e.which === 13) { // 13 is the enter key
+
+			zoomToFilter();
+		}
+	});
+
+	function zoomToFilter() {
+	// Initialize the geocoder.
+		var geocoder = new google.maps.Geocoder();
+		// Get the address or place that the user entered.
+		var address = document.getElementById('filterBox').value;
+		// Make sure the address isn't blank.
+		if (address === '') {
+			window.alert('You must enter a place, or address.');
+		} else {
+
+			console.log("happy");
+			// Geocode the address/area entered to get the center. Then, center the map
+			// on it and zoom in
+			geocoder.geocode(
+				{ address: address
+				}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						map.setCenter(results[0].geometry.location);
+						var centerSpot = results[0].geometry.location;
+						applyFilter(centerSpot);
+						map.setZoom(13);
+					} else {
+						window.alert('We could not find that location - try entering a more' +
+				    	' specific place.');
+				}
+			});
+		}
+	}
+
+
+
+/* **************************************** */
+
+
+
 	// Search box input and marker generation
 	searchBox.addListener('places_changed', function() {
 		var places = searchBox.getPlaces();
@@ -279,6 +377,7 @@ function initMap() {
 		places.forEach(function(place) {
 
 			var marker = new viewModel.Marker(place.name, place.geometry.location);
+			console.log(place.geometry.location);
 
 			markerList.push(marker);
 
@@ -467,6 +566,9 @@ ko.bindingHandlers.toggleClick = {
 			$("#sidebar").animate({
 					left: shift + "vw",
 				}, 350);
+			$("#top_bar").animate({
+					left: shift + "vw",
+				}, 350);
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
 			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
@@ -487,6 +589,10 @@ function removeButton(marker) {
 var viewModel = {
 	navToggleBool: ko.observable(true),
 
+	// Filter: function(location) {
+	// 	var filterMarker = new google.maps.Marker
+	// }
+
 	Marker: function(title, location) {
 	var self = this;
 
@@ -501,11 +607,15 @@ var viewModel = {
 
 	return marker;
 	}
-
-
-
 };
 
-ko.applyBindings(viewModel);
+function AppViewModel() {
+	var self = this;
+
+	self.filterToggle = ko.observable(false);
+
+}
+
+ko.applyBindings(new AppViewModel());
 
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 	<meta charset="UTF-8">
 	<title>Udacity Maps Course</title>
 	<link rel="stylesheet" href="css/styles.css">
@@ -12,15 +13,18 @@
 		}
 		#map {
 			height: 100%;
-			width: 80%;
-			float: right;
 		}
 	</style>
 </head>
 <body>
 
 	<div id="sidebar" class="sidebar" data-bind="">
-		<input id="searchBox" type="text" placeholder="Search Box">
+		<input id="searchBox" type="text" placeholder="Add a marker">
+		<div id="filter">
+			<input data-bind="enable: $root.filterToggle() != true" id="filterBox" type="text" placeholder="Filter the markers">
+			<button data-bind="enable: $root.filterToggle()" id="filterButton" type="button">Clear Filter</button>
+			<input data-bind="enable: $root.filterToggle() != true" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		</div>
 
 		<ul data-bind="foreach: markerList" id="locations">
 			<li data-bind="text: title" class="li"></li>
