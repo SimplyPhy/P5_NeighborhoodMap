@@ -283,15 +283,41 @@ function initMap() {
 	/* **************************************** */
 	// https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&latlng=40.3,-75.1
 
+
+	// function filterMap() {
+	// 	for (var i = 0; i < markerList().length; i++) {
+	// 		if (google.maps.geometry.filterSpot.containsLocation(markerList[i].position, filterSpot)) {
+	// 			markerList[i].setMap(map);
+	// 		} else {
+	// 			markerList[i].setMap(null);
+	// 		}
+
+	// 		var distanceBetween = Math.ceil(google.maps.geometry.spherical.computeDistanceBetween(markerList[0].position(), f.getPosition()));
+	// 		console.log(distanceBetween);
+	// 	}
+	// }
+
+	drawingManager.addListener("overlaycomplete", function(event) {
+
+		if (filterSpot) {
+			filterSpot = null;
+		}
+
+		// deactivate the hand cursor functionality
+		drawingManager.setDrawingMode(null);
+
+		filterSpot = event.overlay;
+
+		filterMap();
+
+
+	});
+
 	function applyFilter(centerPoint) {
 
 		if (filterArray[0]) {
 			filterArray[0].setMap(null);
 		}
-
-		console.log(filterSpot);
-
-		// filterSpot = event.overlay;
 
 		filterArray[0] = new google.maps.Circle({
 			strokeColor: '#D190D4',
@@ -305,24 +331,39 @@ function initMap() {
 		});
 		console.log("happy?");
 
+		// console.log(markerList()[0].latLng);
+
+		// google.maps.geometry.poly.containsLocation(markerList()[i].position, filterArray[0]);
+
+		// var markerPosition = markerList()[0].getPosition();
+
+		// console.log(markerPosition);
+
+		for (var i = 0; i < markerList().length; i++) {
+
+
+			// var positionObj = {
+			// 	lat: markerList()[i].latLng.lat,
+			// 	lng: markerList()[i].latLng.lng
+			// };
+
+			// var position = markerList()[i].latLng.lat + ", " + markerList()[i].latLng.lng;
+
+			markerList()[i].latLng = new google.maps.LatLng({ lat: markerList()[i].customLatLng.lat, lng: markerList()[i].customLatLng.lng});
+			console.log(markerList()[0].LatLng);
+
+			// var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
+			// if (distance > filterArray[0].radius) {
+			if (google.maps.geometry.poly.containsLocation(markerList()[i].latLng, filterArray[0])) {
+				markerList()[i].setMap(null);
+				removeButton(markerList()[i]);
+
+			}
+		}
 
 
 
 	}
-
-	function removeFilterSpot() {
-		filterSpot.setMap(null);
-	}
-
-	// function filterMap() {
-	// 	for (var i = 0; i < markerList().length; i++) {
-	// 		if (google.maps.geometry.poly.containsLocation(markerList[i].position, polygon)) {
-	// 			markerList[i].setMap(map);
-	// 		} else {
-	// 			markerList[i].setMap(null);
-	// 		}
-	// 	}
-	// }
 
 
 	$("#filterBox").keypress(function (e) {
@@ -377,7 +418,6 @@ function initMap() {
 		places.forEach(function(place) {
 
 			var marker = new viewModel.Marker(place.name, place.geometry.location);
-			console.log(place.geometry.location);
 
 			markerList.push(marker);
 
@@ -602,7 +642,8 @@ var viewModel = {
 		position: location,
 		icon: defaultIcon,
 		animation: google.maps.Animation.DROP,
-		colorId: false
+		colorId: false,
+		customLatLng: location
 	});
 
 	return marker;
