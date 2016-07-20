@@ -1,7 +1,6 @@
 var map,
 	markers = [],
 	id = [],
-	currentLi = [],
 	filterArray = [],
 	wikiUrl,
 	infoWindow,
@@ -11,6 +10,7 @@ var map,
 	defaultIcon,
 	highlightedIcon,
 	markerList,
+	markerButton,
 	styleArray;
 
 	// TO-DO:
@@ -27,7 +27,8 @@ var map,
 	//X icon doesn't change on selection
 	//X markerList doesn't update the ul when new markers are added
 	//X Need to make marker disappear when item is removed from the obsArray via the remove button
-	// map doesn't reposition south all the way when marker is selected south of viewport (minor)
+	// (minor) map doesn't reposition south all the way when marker is selected south of viewport
+	// (minor) when searching "churchville, pa" for a new marker, everything works, but console logs an error
 
 
 	// Current task:
@@ -36,6 +37,8 @@ var map,
 
 markerList = ko.observableArray([]);
 var filterSpot = null;
+search = document.getElementById("searchBox");
+markerButton = document.getElementById("addMarker");
 
 styleArray =[
     {
@@ -170,7 +173,7 @@ function initMap() {
 	filter = document.getElementById("filterBox");
 	filterBox = new google.maps.places.SearchBox(filter);
 
-	search = document.getElementById("searchBox");
+	// search = document.getElementById("searchBox"); // now called in the global scope at top
 	searchBox = new google.maps.places.SearchBox(search);
 	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(search); // Removed searchbox from google map
 
@@ -284,19 +287,6 @@ function initMap() {
 	// https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&latlng=40.3,-75.1
 
 
-	// function filterMap() {
-	// 	for (var i = 0; i < markerList().length; i++) {
-	// 		if (google.maps.geometry.filterSpot.containsLocation(markerList[i].position, filterSpot)) {
-	// 			markerList[i].setMap(map);
-	// 		} else {
-	// 			markerList[i].setMap(null);
-	// 		}
-
-	// 		var distanceBetween = Math.ceil(google.maps.geometry.spherical.computeDistanceBetween(markerList[0].position(), f.getPosition()));
-	// 		console.log(distanceBetween);
-	// 	}
-	// }
-
 	drawingManager.addListener("overlaycomplete", function(event) {
 
 		if (filterSpot) {
@@ -334,13 +324,6 @@ function initMap() {
 		var filterRemoveArray = [];
 
 		for (var i = 0; i < currentLength; i++) {
-
-
-			// var positionObj = {
-			// 	lat: markerList()[i].latLng.lat,
-			// 	lng: markerList()[i].latLng.lng
-			// };
-
 
 			var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
 
@@ -392,7 +375,7 @@ function initMap() {
 						map.setZoom(12);
 					} else {
 						window.alert('We could not find that location - try entering a more' +
-				    	' specific place.');
+						' specific place.');
 				}
 			});
 		}
@@ -405,18 +388,15 @@ function initMap() {
 
 
 	// Search box input and marker generation
-	// searchBox.addListener('places_changed', function() {
-	var addMarkerButton = document.getElementById("addMarker");
-	var addMarkerInput = document.getElementById("searchBox");
-
-	addMarkerButton.addEventListener("click", addMarker, false);
-	addMarkerInput.addEventListener("keypress", addMarker, false);
+	markerButton.addEventListener("click", addMarker, false);
+	search.addEventListener("keypress", addMarker, false);
 
 	function addMarker(e) {
 
 			if (e.which !== 13 && e.type !== "click" || search.value === "") {
 				return;
 			}
+			console.log(searchBox.getPlaces());
 
 		setTimeout(function() {
 
@@ -424,7 +404,7 @@ function initMap() {
 			if (places.length === 0) {
 				return;
 			}
-			console.log(places);
+
 
 			places.forEach(function(place) {
 
@@ -437,71 +417,9 @@ function initMap() {
 			});
 			trackLiIndex();
 			setFoursquareUrl(markerList().length);
-			search.value = "";
-			searchBox = new google.maps.places.SearchBox(search);
+			viewModel.searchActive("");
 		}, 100);
 	}
-
-
-
-	// addMarkerButton.addEventListener("click", function() {
-	// 	var places = searchBox.getPlaces();
-	// 	if (places.length === 0) {
-	// 		return;
-	// 	}
-
-	// 	setTimeout(function() {
-	// 		var places = searchBox.getPlaces();
-	// 		if (places.length === 0) {
-	// 			return;
-	// 		}
-
-	// 		places.forEach(function(place) {
-
-	// 			var marker = new viewModel.Marker(place.name, place.geometry.location);
-
-	// 			markerList.push(marker);
-
-	// 			defaultMarkerListener(marker);
-	// 			listItemSelect();
-	// 		});
-	// 		trackLiIndex();
-	// 		setFoursquareUrl(markerList().length);
-	// 	}, 50);
-	// }, false);
-
-	// addMarkerInput.addEventListener("keypress", function(e) {
-	// 		if (e.which !== 13) {
-	// 			return;
-	// 		}
-
-	// 	setTimeout(function() {
-	// 		var places = searchBox.getPlaces();
-	// 		if (places.length === 0) {
-	// 			return;
-	// 		}
-
-	// 		places.forEach(function(place) {
-
-	// 			var marker = new viewModel.Marker(place.name, place.geometry.location);
-
-	// 			markerList.push(marker);
-
-	// 			defaultMarkerListener(marker);
-	// 			listItemSelect();
-	// 		});
-	// 		trackLiIndex();
-	// 		setFoursquareUrl(markerList().length);
-	// 	}, 50);
-	// }, false);
-
-	// searchBox.addListener('places_changed', function() {
-
-	// function hideListings() {
-	// 	for (var i = 0; i < markers.length; i++) {
-	// 		markers[i].setMap(null);
-	// 	}
-	// }
 
 	function makeMarkerIcon(markerColor) {
 		var markerImage = new google.maps.MarkerImage(
@@ -533,6 +451,8 @@ function initMap() {
 				marker.setIcon(highlightedIcon);
 				marker.colorId = true;
 
+				id = parseInt(id);
+				viewModel.selectedLi(id);
 			});
 
 	}
@@ -593,6 +513,8 @@ function initMap() {
 
 		}).done(function(response) {
 
+
+			// console.log(response.response.venues[0].id);
 		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
 			    						response.response.venues[0].id +
 			    						"/photos" +
@@ -644,25 +566,6 @@ function trackLiIndex() {
 }
 
 
-
-// UI (not KO.js)
-// var visible = true;
-
-// $(".nav_button").click(function() {
-// 	if (visible) {
-// 		$("#sidebar").animate({
-// 			left: "-20vw",
-// 		}, 350);
-// 		visible = false;
-// 	} else {
-// 		$("#sidebar").animate({
-// 			left: "0vw",
-// 		}, 350);
-// 		visible = true;
-// 	}
-// });
-
-
 // Knockout JS
 
 // UI
@@ -693,36 +596,41 @@ function removeButton(marker) {
 	marker.setMap(null);
 	markerList.remove(marker);
 	trackLiIndex();
+	viewModel.selectedLi("");
 }
+
 
 var viewModel = {
 	navToggleBool: ko.observable(true),
 
-	// Filter: function(location) {
-	// 	var filterMarker = new google.maps.Marker
-	// }
+	searchActive: ko.observable(""),
+	selectedLi: ko.observable(),
 
 	Marker: function(title, location) {
-	var self = this;
+		var self = this;
 
-	var marker =  new google.maps.Marker({
-		map: map,
-		title: title,
-		position: location,
-		icon: defaultIcon,
-		animation: google.maps.Animation.DROP,
-		colorId: false,
-		customLatLng: location
-	});
+		var marker =  new google.maps.Marker({
+			map: map,
+			title: title,
+			position: location,
+			icon: defaultIcon,
+			animation: google.maps.Animation.DROP,
+			colorId: false,
+			customLatLng: location
+		});
 
-	return marker;
+		return marker;
 	}
+
 };
+
+var searching = ko.observable(search.value.length);
 
 function AppViewModel() {
 	var self = this;
 
 	self.filterToggle = ko.observable(false);
+	// self.searchActive = ko.observable("");
 
 }
 

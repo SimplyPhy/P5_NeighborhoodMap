@@ -20,12 +20,12 @@
 
 	<div id="sidebar" class="sidebar" data-bind="">
 		<div class="add_marker">
-			<input id="searchBox" type="text" placeholder="Add a marker">
-			<button data-bind="" type="button" class="addMarker" id="addMarker">Add</button>
+			<input data-bind="textInput: viewModel.searchActive" id="searchBox" type="text" placeholder="Select a new location">
+			<button data-bind="enable: viewModel.searchActive" type="button" class="addMarker" id="addMarker">Add</button>
 		</div>
 		<ul data-bind="foreach: markerList" id="locations">
 			<li data-bind="text: title" class="li"></li>
-			<button type="button" data-bind="click: removeButton" class="removeMarker">Remove</button>
+			<button type="button" data-bind="click: removeButton, visible: viewModel.selectedLi() === $index()" class="removeMarker">Remove</button>
 		</ul>
 	</div>
 	<div id="top_bar">
