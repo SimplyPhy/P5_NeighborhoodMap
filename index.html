@@ -19,13 +19,10 @@
 <body>
 
 	<div id="sidebar" class="sidebar" data-bind="">
-		<input id="searchBox" type="text" placeholder="Add a marker">
-		<div id="filter">
-			<input data-bind="enable: $root.filterToggle() != true" id="filterBox" type="text" placeholder="Filter the markers">
-			<button data-bind="enable: $root.filterToggle()" id="filterButton" type="button">Clear Filter</button>
-			<input data-bind="enable: $root.filterToggle() != true" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		<div class="add_marker">
+			<input id="searchBox" type="text" placeholder="Add a marker">
+			<button data-bind="" type="button" class="addMarker" id="addMarker">Add</button>
 		</div>
-
 		<ul data-bind="foreach: markerList" id="locations">
 			<li data-bind="text: title" class="li"></li>
 			<button type="button" data-bind="click: removeButton" class="removeMarker">Remove</button>
@@ -33,6 +30,11 @@
 	</div>
 	<div id="top_bar">
 		<img src="images/nav_icon.png" data-bind="toggleClick: navToggleBool" alt="Nav Button" class="nav_button" />
+	</div>
+	<div id="filter">
+		<input data-bind="enable: filterToggle() != true" id="filterBox" type="text" placeholder="Filter the markers">
+		<input data-bind="enable: filterToggle() != true" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		<button data-bind="disable: filterToggle()" id="filterButton" type="button">Clear Filter</button>
 	</div>
 
 	<div id="map"></div>

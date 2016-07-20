@@ -389,7 +389,7 @@ function initMap() {
 						map.setCenter(results[0].geometry.location);
 						var centerPoint = results[0].geometry.location;
 						applyFilter(centerPoint);
-						map.setZoom(10);
+						map.setZoom(12);
 					} else {
 						window.alert('We could not find that location - try entering a more' +
 				    	' specific place.');
@@ -405,24 +405,97 @@ function initMap() {
 
 
 	// Search box input and marker generation
-	searchBox.addListener('places_changed', function() {
-		var places = searchBox.getPlaces();
-		if (places.length === 0) {
-			return;
-		}
+	// searchBox.addListener('places_changed', function() {
+	var addMarkerButton = document.getElementById("addMarker");
+	var addMarkerInput = document.getElementById("searchBox");
 
-		places.forEach(function(place) {
+	addMarkerButton.addEventListener("click", addMarker, false);
+	addMarkerInput.addEventListener("keypress", addMarker, false);
 
-			var marker = new viewModel.Marker(place.name, place.geometry.location);
+	function addMarker(e) {
 
-			markerList.push(marker);
+			if (e.which !== 13 && e.type !== "click" || search.value === "") {
+				return;
+			}
 
-			defaultMarkerListener(marker);
-			listItemSelect();
-		});
-		trackLiIndex();
-		setFoursquareUrl(markerList().length);
-	});
+		setTimeout(function() {
+
+			var places = searchBox.getPlaces();
+			if (places.length === 0) {
+				return;
+			}
+			console.log(places);
+
+			places.forEach(function(place) {
+
+				var marker = new viewModel.Marker(place.name, place.geometry.location);
+
+				markerList.push(marker);
+
+				defaultMarkerListener(marker);
+				listItemSelect();
+			});
+			trackLiIndex();
+			setFoursquareUrl(markerList().length);
+			search.value = "";
+			searchBox = new google.maps.places.SearchBox(search);
+		}, 100);
+	}
+
+
+
+	// addMarkerButton.addEventListener("click", function() {
+	// 	var places = searchBox.getPlaces();
+	// 	if (places.length === 0) {
+	// 		return;
+	// 	}
+
+	// 	setTimeout(function() {
+	// 		var places = searchBox.getPlaces();
+	// 		if (places.length === 0) {
+	// 			return;
+	// 		}
+
+	// 		places.forEach(function(place) {
+
+	// 			var marker = new viewModel.Marker(place.name, place.geometry.location);
+
+	// 			markerList.push(marker);
+
+	// 			defaultMarkerListener(marker);
+	// 			listItemSelect();
+	// 		});
+	// 		trackLiIndex();
+	// 		setFoursquareUrl(markerList().length);
+	// 	}, 50);
+	// }, false);
+
+	// addMarkerInput.addEventListener("keypress", function(e) {
+	// 		if (e.which !== 13) {
+	// 			return;
+	// 		}
+
+	// 	setTimeout(function() {
+	// 		var places = searchBox.getPlaces();
+	// 		if (places.length === 0) {
+	// 			return;
+	// 		}
+
+	// 		places.forEach(function(place) {
+
+	// 			var marker = new viewModel.Marker(place.name, place.geometry.location);
+
+	// 			markerList.push(marker);
+
+	// 			defaultMarkerListener(marker);
+	// 			listItemSelect();
+	// 		});
+	// 		trackLiIndex();
+	// 		setFoursquareUrl(markerList().length);
+	// 	}, 50);
+	// }, false);
+
+	// searchBox.addListener('places_changed', function() {
 
 	// function hideListings() {
 	// 	for (var i = 0; i < markers.length; i++) {
