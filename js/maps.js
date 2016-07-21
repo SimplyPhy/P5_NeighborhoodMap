@@ -11,7 +11,9 @@ var map,
 	highlightedIcon,
 	markerList,
 	markerButton,
-	styleArray;
+	styleArray,
+	locations,
+	filterSpot;
 
 	// TO-DO:
 	//X Add remove location button next to each list item
@@ -36,9 +38,10 @@ var map,
 
 
 markerList = ko.observableArray([]);
-var filterSpot = null;
+filterSpot = null;
 search = document.getElementById("searchBox");
 markerButton = document.getElementById("addMarker");
+locations = document.getElementById("locations");
 
 styleArray =[
     {
@@ -215,16 +218,29 @@ function initMap() {
 	function defaultMarkerListener(marker) {
 
 		marker.addListener('click', function() {
+
+			var locationsArray = locations.getElementsByTagName("li");
+
 			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
+			$(".li").css("background-color", "black");
+
+			id = parseInt(marker.id);
+			viewModel.selectedLi(id);
 
 			for(var i = 0; i < markerList().length; i++) {
 
 				markerList()[i].setIcon(defaultIcon);
 				markerList()[i].colorId = false;
+
+				if (i === id) {
+					locationsArray[i].style.backgroundColor = "#8DBA7E";
+				}
 			}
+
 
 			this.setIcon(highlightedIcon);
 			this.colorId = true;
+
 		});
 	}
 
@@ -440,6 +456,7 @@ function initMap() {
 				var id = item.target.id;
 				var marker = markerList()[id];
 
+				$(".li").css("background-color", "black");
 				populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
 
 				for(var i = 0; i < markerList().length; i++) {
@@ -451,11 +468,31 @@ function initMap() {
 				marker.setIcon(highlightedIcon);
 				marker.colorId = true;
 
+				$(this).css("background-color", "#8DBA7E");
+
+
 				id = parseInt(id);
 				viewModel.selectedLi(id);
 			});
 
 	}
+
+// 	$(".li").foreach(fuction() {
+// 		click(function() {
+// 		$(this)[0].css("background-color", "grey");
+
+
+// $( ".selected" ).each(function(index) {
+//     $(this).on("click", function(){
+//         // For the boolean value
+//         var boolKey = $(this).data('selected');
+//         // For the mammal value
+//         var mammalKey = $(this).attr('id');
+//     });
+// });
+
+
+// 	})
 
 	defineDefaultMarkerArray();
 	showListings();
