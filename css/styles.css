@@ -69,17 +69,21 @@ table {
 #locations {
 	position: relative;
 	top: 5vh;
-	left: 1.5em;
+	/*left: 1.5em;*/
 }
 
 .li {
 	color: white;
 	width: 100%;
+	position: relative;
+	left: 1.5em;
 	/*display: inline-block;*/
 }
 
 .removeMarker {
 	margin: .1em 0 .1em 0;
+	position: relative;
+	left: 2em;
 }
 
 #top_bar {

@@ -24,7 +24,7 @@
 			<button data-bind="enable: viewModel.searchActive" type="button" class="addMarker" id="addMarker">Add</button>
 		</div>
 		<ul data-bind="foreach: markerList" id="locations">
-			<li data-bind="text: title" class="li"></li>
+			<div class="li_div"><li data-bind="text: title" class="li"></li></div>
 			<button type="button" data-bind="click: removeButton, visible: viewModel.selectedLi() === $index()" class="removeMarker">Remove</button>
 		</ul>
 	</div>
@@ -32,9 +32,9 @@
 		<img src="images/nav_icon.png" data-bind="toggleClick: navToggleBool" alt="Nav Button" class="nav_button" />
 	</div>
 	<div id="filter">
-		<input data-bind="enable: filterToggle() != true" id="filterBox" type="text" placeholder="Filter the markers">
-		<input data-bind="enable: filterToggle() != true" id="filterRadius" type="text" placeholder="Search radius (in miles)">
-		<button data-bind="disable: filterToggle()" id="filterButton" type="button">Clear Filter</button>
+		<input data-bind="enable: !viewModel.filter()" id="filterBox" type="text" placeholder="Filter the markers">
+		<input data-bind="enable: !viewModel.filter()" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		<button data-bind="enable: viewModel.filter()" id="filterButton" type="button">Clear Filter</button>
 	</div>
 
 	<div id="map"></div>

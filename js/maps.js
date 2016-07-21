@@ -223,6 +223,7 @@ function initMap() {
 
 			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 			$(".li").css("background-color", "black");
+			$(".li_div").css("background-color", "black");
 
 			id = parseInt(marker.id);
 			viewModel.selectedLi(id);
@@ -234,6 +235,7 @@ function initMap() {
 
 				if (i === id) {
 					locationsArray[i].style.backgroundColor = "#8DBA7E";
+					locationsArray[i].parentNode.style.backgroundColor = "#8DBA7E";
 				}
 			}
 
@@ -378,7 +380,6 @@ function initMap() {
 			window.alert('You must enter a place, or address.');
 		} else {
 
-			console.log("happy");
 			// Geocode the address/area entered to get the center. Then, center the map
 			// on it and zoom in
 			geocoder.geocode(
@@ -412,7 +413,6 @@ function initMap() {
 			if (e.which !== 13 && e.type !== "click" || search.value === "") {
 				return;
 			}
-			console.log(searchBox.getPlaces());
 
 		setTimeout(function() {
 
@@ -434,7 +434,7 @@ function initMap() {
 			trackLiIndex();
 			setFoursquareUrl(markerList().length);
 			viewModel.searchActive("");
-		}, 100);
+		}, 200);
 	}
 
 	function makeMarkerIcon(markerColor) {
@@ -457,6 +457,8 @@ function initMap() {
 				var marker = markerList()[id];
 
 				$(".li").css("background-color", "black");
+				$(".li_div").css("background-color", "black");
+
 				populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
 
 				for(var i = 0; i < markerList().length; i++) {
@@ -469,6 +471,7 @@ function initMap() {
 				marker.colorId = true;
 
 				$(this).css("background-color", "#8DBA7E");
+				$(this).parent().css("background-color", "#8DBA7E");
 
 
 				id = parseInt(id);
@@ -642,6 +645,7 @@ var viewModel = {
 
 	searchActive: ko.observable(""),
 	selectedLi: ko.observable(),
+	filter: ko.observable(false),
 
 	Marker: function(title, location) {
 		var self = this;
