@@ -1,7 +1,7 @@
 var map,
 	markers = [],
 	id = [],
-	filterArray = [],
+	activeFilter,
 	wikiUrl,
 	infoWindow,
 	search,
@@ -10,13 +10,12 @@ var map,
 	defaultIcon,
 	highlightedIcon,
 	markerList,
-	markerButton,
 	styleArray,
 	locations,
 	filter,
 	filterSpot,
 	filterRadius,
-	filterButton;
+	filterButtonClear;
 
 	// TO-DO:
 	//X Add remove location button next to each list item
@@ -43,10 +42,10 @@ var map,
 markerList = ko.observableArray([]);
 filterSpot = null;
 search = document.getElementById("searchBox");
-markerButton = document.getElementById("addMarker");
 locations = document.getElementById("locations");
 filter = document.getElementById("filterBox");
 filterRadius = document.getElementById("filterRadius");
+filterButtonClear = document.getElementById("filterButtonClear");
 filterButton = document.getElementById("filterButton");
 
 styleArray =[
@@ -327,11 +326,7 @@ function initMap() {
 
 	function applyFilter(centerPoint) {
 
-		if (filterArray[0]) {
-			filterArray[0].setMap(null);
-		}
-
-		filterArray[0] = new google.maps.Circle({
+		activeFilter = new google.maps.Circle({
 			strokeColor: '#D190D4',
 			strokeOpacity: 0.6,
 			strokeWeight: 2,
@@ -349,7 +344,7 @@ function initMap() {
 
 			var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
 
-			if (distance > filterArray[0].radius) {
+			if (distance > activeFilter.radius) {
 				markerList()[i].setMap(null);
 				filterRemoveArray.push(markerList()[i]);
 			}
@@ -363,36 +358,45 @@ function initMap() {
 		}
 
 		filterRemoveArray = [];
-		viewModel.filter(true);
 
-		removeFilter(filterArray);
+		viewModel.filter(true);
+		viewModel.searchEnable(false);
+
+		search.value = "Clear filter to use";
+		filterRadius.value += " miles";
+
+		removeFilter(activeFilter);
 
 	}
 
 	function removeFilter(currentFilter) {
-		$("#filterButton").click(function(evt) {
+		$("#filterButtonClear").click(function(evt) {
 
 			filter.value = "";
 			filterRadius.value = "";
-			currentFilter[0].setMap(null);
-			currentFilter[0] = null;
+			console.log(currentFilter);
+			if(currentFilter) {
+				currentFilter.setMap(null);
+			}
+			currentFilter = null;
 			viewModel.filter(false);
+			viewModel.searchEnable(true);
+			search.value = "";
 		});
 	}
 
 
-	$("#filterBox").keypress(function (e) {
-		if (e.which === 13) { // 13 is the enter key
+	$("#filterButton").click(function () {
 
 			zoomToFilter();
-		}
+
 	});
 
 	function zoomToFilter() {
 	// Initialize the geocoder.
 		var geocoder = new google.maps.Geocoder();
 		// Get the address or place that the user entered.
-		var address = document.getElementById('filterBox').value;
+		var address = filter.value;
 		// Make sure the address isn't blank.
 		if (address === '') {
 			window.alert('You must enter a place, or address.');
@@ -423,22 +427,30 @@ function initMap() {
 
 
 	// Search box input and marker generation
-	markerButton.addEventListener("click", addMarker, false);
-	search.addEventListener("keypress", addMarker, false);
 
-	function addMarker(e) {
+	// markerButton.addEventListener("click", addMarker, false);// 	this didn't work, because getPlaces() is
+	// search.addEventListener("keypress", addMarker, false);	//	an ajax call that's designed to work with
+																// 	the "places_changed" event specifically
 
-			if (e.which !== 13 && e.type !== "click" || search.value === "") {
-				return;
-			}
+	searchBox.addListener("places_changed", addMarker);
 
-		setTimeout(function() {
+	// document.getElementById("myBtn").addEventListener("click", function(){
+ //    	searchBox.__e3_.places_changed[17].b.call();
+	// });
+
+	function addMarker() {
 
 			var places = searchBox.getPlaces();
-			if (places.length === 0) {
+
+			if (!places) {
+				alert("Search failed: please try your search again");
 				return;
 			}
 
+			if (places.length === 0) {
+				alert("No search Results, please try again");
+				return;
+			}
 
 			places.forEach(function(place) {
 
@@ -452,7 +464,7 @@ function initMap() {
 			trackLiIndex();
 			setFoursquareUrl(markerList().length);
 			viewModel.searchActive("");
-		}, 200);
+		// }, timeout);
 	}
 
 	function makeMarkerIcon(markerColor) {
@@ -554,8 +566,10 @@ function initMap() {
 
 		}).done(function(response) {
 
+			if (!response.response.venues[0]) {
+				return;
+			}
 
-			// console.log(response.response.venues[0].id);
 		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
 			    						response.response.venues[0].id +
 			    						"/photos" +
@@ -640,13 +654,17 @@ function removeButton(marker) {
 	viewModel.selectedLi("");
 }
 
-
 var viewModel = {
 	navToggleBool: ko.observable(true),
 
 	searchActive: ko.observable(""),
+	searchEnable: ko.observable(true),
+
 	selectedLi: ko.observable(),
 	filter: ko.observable(),
+
+	// filterSearchInput: ko.observable(filter.value),
+	// filterRadiusInput: ko.observable(filterRadius.value),
 
 	Marker: function(title, location) {
 		var self = this;
@@ -670,7 +688,21 @@ var searching = ko.observable(search.value.length);
 
 function AppViewModel() {
 
-	// Doh!
+	var self = this;
+
+	self.filterSearchInput = ko.observable();
+	self.filterRadiusInput = ko.observable();
+
+	self.filterReady = ko.computed(function(){
+		if (!self.filterSearchInput() || !self.filterRadiusInput()) { return false; }
+
+		if ( self.filterSearchInput().length && self.filterRadiusInput()) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+
 
 }
 

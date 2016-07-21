@@ -20,8 +20,7 @@
 
 	<div id="sidebar" class="sidebar" data-bind="">
 		<div class="add_marker">
-			<input data-bind="textInput: viewModel.searchActive" id="searchBox" type="text" placeholder="Select a new location">
-			<button data-bind="visible: viewModel.searchActive" type="button" class="addMarker" id="addMarker">Add</button>
+			<input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Select a new location">
 		</div>
 		<ul data-bind="foreach: markerList" id="locations">
 			<div class="li_div"><li data-bind="text: title" class="li"></li></div>
@@ -32,9 +31,10 @@
 		<img src="images/nav_icon.png" data-bind="toggleClick: navToggleBool" alt="Nav Button" class="nav_button" />
 	</div>
 	<div id="filter">
-		<input data-bind="enable: !viewModel.filter()" id="filterBox" type="text" placeholder="Filter the markers">
-		<input data-bind="enable: !viewModel.filter()" id="filterRadius" type="text" placeholder="Search radius (in miles)">
-		<button data-bind="enable: viewModel.filter()" id="filterButton" type="button">Clear Filter</button>
+		<input data-bind="enable: !viewModel.filter(), textInput: $root.filterSearchInput" id="filterBox" type="text" placeholder="Filter the markers">
+		<input data-bind="enable: !viewModel.filter(), textInput: $root.filterRadiusInput" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		<button data-bind="visible: !viewModel.filter(), enable: $root.filterReady" id="filterButton" type="button">Add Filter</button>
+		<button data-bind="visible: viewModel.filter()" id="filterButtonClear" type="button">Clear Filter</button>
 	</div>
 
 	<div id="map"></div>

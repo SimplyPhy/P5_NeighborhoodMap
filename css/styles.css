@@ -51,6 +51,10 @@ table {
 
 /* end inported styles */
 
+html, body {
+	overflow: hidden
+}
+
 .sidebar {
 	background-color: black;
 	position: absolute;
@@ -58,6 +62,7 @@ table {
 	height: 100%;
 	z-index: 1;
 	overflow: hidden;
+	overflow-y: auto;
 }
 
 .add_marker {
@@ -69,7 +74,6 @@ table {
 #locations {
 	position: relative;
 	top: 5vh;
-	/*left: 1.5em;*/
 }
 
 .li {
@@ -77,7 +81,11 @@ table {
 	width: 100%;
 	position: relative;
 	left: 1.5em;
-	/*display: inline-block;*/
+	padding: .2em 0 .2em 0;
+}
+
+.li_div {
+	padding: .2em 0 .2em 0;
 }
 
 .removeMarker {
