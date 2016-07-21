@@ -21,7 +21,7 @@
 	<div id="sidebar" class="sidebar" data-bind="">
 		<div class="add_marker">
 			<input data-bind="textInput: viewModel.searchActive" id="searchBox" type="text" placeholder="Select a new location">
-			<button data-bind="enable: viewModel.searchActive" type="button" class="addMarker" id="addMarker">Add</button>
+			<button data-bind="visible: viewModel.searchActive" type="button" class="addMarker" id="addMarker">Add</button>
 		</div>
 		<ul data-bind="foreach: markerList" id="locations">
 			<div class="li_div"><li data-bind="text: title" class="li"></li></div>

@@ -13,7 +13,10 @@ var map,
 	markerButton,
 	styleArray,
 	locations,
-	filterSpot;
+	filter,
+	filterSpot,
+	filterRadius,
+	filterButton;
 
 	// TO-DO:
 	//X Add remove location button next to each list item
@@ -42,6 +45,9 @@ filterSpot = null;
 search = document.getElementById("searchBox");
 markerButton = document.getElementById("addMarker");
 locations = document.getElementById("locations");
+filter = document.getElementById("filterBox");
+filterRadius = document.getElementById("filterRadius");
+filterButton = document.getElementById("filterButton");
 
 styleArray =[
     {
@@ -173,7 +179,7 @@ function initMap() {
 
 	infoWindow = new google.maps.InfoWindow();
 
-	filter = document.getElementById("filterBox");
+	// filter = document.getElementById("filterBox");
 	filterBox = new google.maps.places.SearchBox(filter);
 
 	// search = document.getElementById("searchBox"); // now called in the global scope at top
@@ -234,8 +240,8 @@ function initMap() {
 				markerList()[i].colorId = false;
 
 				if (i === id) {
-					locationsArray[i].style.backgroundColor = "#8DBA7E";
-					locationsArray[i].parentNode.style.backgroundColor = "#8DBA7E";
+					locationsArray[i].style.backgroundColor = "#6B8C5F";
+					locationsArray[i].parentNode.style.backgroundColor = "#6B8C5F";
 				}
 			}
 
@@ -294,8 +300,6 @@ function initMap() {
 		map.fitBounds(bounds);
 	}
 
-	var filterRadius = document.getElementById("filterRadius");
-
 	var drawingManager = new google.maps.drawing.DrawingManager({
 		drawingMode: google.maps.drawing.OverlayType.CIRCLE,
 		drawingControl: false,
@@ -351,7 +355,7 @@ function initMap() {
 			}
 		}
 
-		// The following removes modifies the underlying
+		// The following removes modifies the outlying markers
 		var currentFilteredLength = filterRemoveArray.length;
 
 		for (var ii = 0; ii < currentFilteredLength; ii++) {
@@ -359,7 +363,21 @@ function initMap() {
 		}
 
 		filterRemoveArray = [];
+		viewModel.filter(true);
 
+		removeFilter(filterArray);
+
+	}
+
+	function removeFilter(currentFilter) {
+		$("#filterButton").click(function(evt) {
+
+			filter.value = "";
+			filterRadius.value = "";
+			currentFilter[0].setMap(null);
+			currentFilter[0] = null;
+			viewModel.filter(false);
+		});
 	}
 
 
@@ -470,8 +488,8 @@ function initMap() {
 				marker.setIcon(highlightedIcon);
 				marker.colorId = true;
 
-				$(this).css("background-color", "#8DBA7E");
-				$(this).parent().css("background-color", "#8DBA7E");
+				$(this).css("background-color", "#6B8C5F");
+				$(this).parent().css("background-color", "#6B8C5F");
 
 
 				id = parseInt(id);
@@ -479,23 +497,6 @@ function initMap() {
 			});
 
 	}
-
-// 	$(".li").foreach(fuction() {
-// 		click(function() {
-// 		$(this)[0].css("background-color", "grey");
-
-
-// $( ".selected" ).each(function(index) {
-//     $(this).on("click", function(){
-//         // For the boolean value
-//         var boolKey = $(this).data('selected');
-//         // For the mammal value
-//         var mammalKey = $(this).attr('id');
-//     });
-// });
-
-
-// 	})
 
 	defineDefaultMarkerArray();
 	showListings();
@@ -645,7 +646,7 @@ var viewModel = {
 
 	searchActive: ko.observable(""),
 	selectedLi: ko.observable(),
-	filter: ko.observable(false),
+	filter: ko.observable(),
 
 	Marker: function(title, location) {
 		var self = this;
@@ -668,10 +669,8 @@ var viewModel = {
 var searching = ko.observable(search.value.length);
 
 function AppViewModel() {
-	var self = this;
 
-	self.filterToggle = ko.observable(false);
-	// self.searchActive = ko.observable("");
+	// Doh!
 
 }
 
