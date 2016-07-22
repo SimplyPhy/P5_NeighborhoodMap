@@ -641,7 +641,9 @@ ko.bindingHandlers.toggleClick = {
 					left: shift + "vw",
 				}, 350);
 			if (shift === 60) {
-				$("#top_bar").css("width", "40vw");
+				setTimeout(function(){
+					$("#top_bar").css("width", "40vw");
+				}, 400);
 			} else {
 				$("#top_bar").css("width", "100%");
 			}
