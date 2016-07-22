@@ -4,6 +4,7 @@
 
 .side_bar {
 	width: 60vw;
+	z-index: 2;
 }
 
 /*ul li {
