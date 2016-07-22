@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta 	name="viewport"
+			content="	initial-scale=1.0,
+						user-scalable=no">
+	<meta charset="UTF-8">
+	<title>Udacity Maps Course</title>
+	<link 	rel="stylesheet"
+			href="css/styles.css">
+	<link 	rel="stylesheet"
+			media="screen and (max-width:750px)"
+			href="css/mobile.css">
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+
+	<div 	id="side_bar"
+			class="side_bar"
+			data-bind="">
+		<div class="add_marker">
+			<input data-bind="	textInput: viewModel.searchActive,
+								enable: viewModel.searchEnable"
+								id="searchBox"
+								type="text"
+								placeholder="Select a new location">
+		</div>
+		<ul data-bind="foreach: markerList"
+			id="locations">
+			<div class="li_div">
+				<li data-bind="text: title"
+					class="li">
+				</li>
+			</div>
+			<button type="button"
+					data-bind="click: removeButton,
+					visible: viewModel.selectedLi() === $index()"
+					class="removeMarker">
+					Remove
+			</button>
+		</ul>
+	</div>
+	<div id="top_bar" class="top_bar">
+		<img 	src="images/nav_icon.png"
+				data-bind="toggleClick: navToggleBool"
+				alt="Nav Button"
+				class="nav_button" />
+	</div>
+	<div id="filter">
+		<input 	data-bind="	enable: !viewModel.filter(),
+							textInput: $root.filterSearchInput,
+							visible: $viewModel.mobileScroll()"
+				id="filterBox"
+				type="text"
+				placeholder="Filter the markers">
+
+		<input 	data-bind="	enable: !viewModel.filter(),
+							textInput: $root.filterRadiusInput,
+							visible: $viewModel.mobileScroll()"
+				id="filterRadius"
+				type="text"
+				placeholder="Search radius (in miles)">
+
+		<button data-bind="	visible: !viewModel.filter(),
+							enable: $root.filterReady"
+				id="filterButton"
+				type="button">Add Filter</button>
+
+		<button data-bind="visible: viewModel.filter()"
+				id="filterButtonClear"
+				type="button">Clear Filter</button>
+	</div>
+
+	<div id="map"></div>
+
+
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"
+			integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+			crossorigin="anonymous">
+	</script>
+
+	<script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.0.js"></script>
+	<script src="js/maps.js"></script>
+
+	<script async defer src="	https://maps.googleapis.com/maps/api/js?
+								libraries=drawing,geometry,places&
+								key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&
+								callback=initMap">
+	</script>
+</body>
+</html>
