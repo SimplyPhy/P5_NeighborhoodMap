@@ -22,9 +22,9 @@ var map,
 	//X Make list items clickable/selectable
 	//X Add foursquare content to infoWindows for each location selected
 	//X Create dynamic side-bar containing the list and text input
-	// Add touch functionality
+	//X Add touch functionality
 	// make sure ui is responsive
-	// Add error handling for API AJAX requests
+	//X Add error handling for API AJAX requests
 
 	// Bugs:
 	//X markerList().length = 10;
@@ -32,10 +32,10 @@ var map,
 	//X markerList doesn't update the ul when new markers are added
 	//X Need to make marker disappear when item is removed from the obsArray via the remove button
 	// (minor) map doesn't reposition south all the way when marker is selected south of viewport
-	// (minor) when searching "churchville, pa" for a new marker, everything works, but console logs an error
+	//X (minor) when searching "churchville, pa" for a new marker, everything works, but console logs an error
 
 
-	// Current task:
+	// Current task: Make UI mobile friendly :D!!
 
 
 
@@ -434,10 +434,6 @@ function initMap() {
 
 	searchBox.addListener("places_changed", addMarker);
 
-	// document.getElementById("myBtn").addEventListener("click", function(){
- //    	searchBox.__e3_.places_changed[17].b.call();
-	// });
-
 	function addMarker() {
 
 			var places = searchBox.getPlaces();
@@ -570,6 +566,10 @@ function initMap() {
 				return;
 			}
 
+			var timeoutTest = setTimeout(function() {
+				alert("An error occurred.  Please try again!");
+			}, 3000);
+
 		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
 			    						response.response.venues[0].id +
 			    						"/photos" +
@@ -596,15 +596,16 @@ function initMap() {
 		    		markerList()[index].FS_url_image = photo;
 		    	}
 
+		    	clearTimeout(timeoutTest);
 
 		    }).fail(function() {
-		    	// notify user
+		    	alert("A problem occurred, please try your request again.");
 		    });
 
 		}).fail(function() {
-		    // notify user
+		    alert("A problem occurred, please try your request again.");
 		});
-	} // add timeout
+	}
 
 
 	setFoursquareUrl();
@@ -720,4 +721,3 @@ fixedSide.addEventListener('touchmove', function(e) {
 fixedTop.addEventListener('touchmove', function(e) {
         e.preventDefault();
 }, false);
-
