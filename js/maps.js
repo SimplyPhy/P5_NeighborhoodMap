@@ -640,6 +640,9 @@ ko.bindingHandlers.toggleClick = {
 			$("#top_bar").animate({
 					left: shift + "vw",
 				}, 350);
+			// if (shift === 60) {
+			// 	$("#top_bar").css("width", "40vw");
+			// }
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
 			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
