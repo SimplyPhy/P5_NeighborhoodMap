@@ -631,7 +631,7 @@ ko.bindingHandlers.toggleClick = {
 		var shift = -20;
 
 		if (window.matchMedia('(max-width: 800px)').matches)
-		{ shift = -60; }
+		{ shift = 0; }
 
 		ko.utils.registerEventHandler(element, "click", function () {
 			$("#side_bar").animate({
@@ -644,7 +644,7 @@ ko.bindingHandlers.toggleClick = {
 
 			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
 			else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 800px)').matches)
-												{ shift = -60; }
+												{ shift = 60; }
 			else 								{ shift = -20; }
 		});
 	}
