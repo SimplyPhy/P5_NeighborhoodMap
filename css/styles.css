@@ -57,6 +57,10 @@ html, body {
 	overflow: hidden;
 }
 
+#map {
+	height: 100%;
+}
+
 .side_bar {
 	background-color: black;
 	position: absolute;
