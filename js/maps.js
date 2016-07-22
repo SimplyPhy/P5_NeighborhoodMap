@@ -631,7 +631,7 @@ ko.bindingHandlers.toggleClick = {
 		var shift = -20;
 
 		ko.utils.registerEventHandler(element, "click", function () {
-			$("#sidebar").animate({
+			$("#side_bar").animate({
 					left: shift + "vw",
 				}, 350);
 			$("#top_bar").animate({
@@ -711,7 +711,7 @@ ko.applyBindings(new AppViewModel());
 
 
 // Fixes scrolling overflow on mobile
-var fixedSide = document.getElementById('sidebar');
+var fixedSide = document.getElementById('side_bar');
 var fixedTop = document.getElementById('top_bar');
 
 fixedSide.addEventListener('touchmove', function(e) {

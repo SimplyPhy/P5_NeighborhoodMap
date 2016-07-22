@@ -57,7 +57,7 @@ html, body {
 	overflow: hidden;
 }
 
-.sidebar {
+.side_bar {
 	background-color: black;
 	position: absolute;
 	width: 20vw;
@@ -96,7 +96,7 @@ html, body {
 	left: 2em;
 }
 
-#top_bar {
+.top_bar {
 	background-color: black;
 	display: inline-block;
 	width: 100vw;

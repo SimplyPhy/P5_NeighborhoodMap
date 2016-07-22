@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<title>Udacity Maps Course</title>
 	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" media="screen and (max-width:750px)" href="css/mobile.css">
 	<style>
 		html, body {
 			height: 100%;
@@ -18,7 +19,7 @@
 </head>
 <body>
 
-	<div id="sidebar" class="sidebar" data-bind="">
+	<div id="side_bar" class="side_bar" data-bind="">
 		<div class="add_marker">
 			<input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Select a new location">
 		</div>
@@ -27,7 +28,7 @@
 			<button type="button" data-bind="click: removeButton, visible: viewModel.selectedLi() === $index()" class="removeMarker">Remove</button>
 		</ul>
 	</div>
-	<div id="top_bar">
+	<div id="top_bar" class="top_bar">
 		<img src="images/nav_icon.png" data-bind="toggleClick: navToggleBool" alt="Nav Button" class="nav_button" />
 	</div>
 	<div id="filter">
