@@ -640,11 +640,19 @@ ko.bindingHandlers.toggleClick = {
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
 			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
+			else if (viewMode.navToggleBool() && window.matchMedia('(max-width: 800px)').matches)
+												{ shift = -60; }
 			else 								{ shift = -20; }
 		});
 	}
 };
 
+
+if (window.matchMedia('(max-width: 767px)').matches) {
+        //...
+    } else {
+        //...
+    }
 
 function removeButton(marker) {
 	var thisId = marker.id;
