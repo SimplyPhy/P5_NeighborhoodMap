@@ -715,13 +715,13 @@ ko.applyBindings(new AppViewModel());
 
 
 // Fixes scrolling overflow on mobile
-var fixedSide = document.getElementById('side_bar');
-var fixedTop = document.getElementById('top_bar');
+// var fixedSide = document.getElementById('side_bar');
+// var fixedTop = document.getElementById('top_bar');
 
-fixedSide.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-}, false);
+// fixedSide.addEventListener('touchmove', function(e) {
+//         e.preventDefault();
+// }, false);
 
-fixedTop.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-}, false);
+// fixedTop.addEventListener('touchmove', function(e) {
+//         e.preventDefault();
+// }, false);
