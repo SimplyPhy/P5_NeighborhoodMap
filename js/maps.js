@@ -630,6 +630,9 @@ ko.bindingHandlers.toggleClick = {
 		var value = viewModel.navToggleBool();
 		var shift = -20;
 
+		if (viewMode.navToggleBool() && window.matchMedia('(max-width: 800px)').matches)
+		{ shift = -60; }
+
 		ko.utils.registerEventHandler(element, "click", function () {
 			$("#side_bar").animate({
 					left: shift + "vw",
@@ -646,13 +649,6 @@ ko.bindingHandlers.toggleClick = {
 		});
 	}
 };
-
-
-if (window.matchMedia('(max-width: 767px)').matches) {
-        //...
-    } else {
-        //...
-    }
 
 function removeButton(marker) {
 	var thisId = marker.id;
