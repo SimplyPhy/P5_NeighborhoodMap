@@ -6,7 +6,7 @@
 .side_bar {
 	width: 60vw;
 	z-index: 3;
-	margin-left: -60;
+	margin-left: -60vw;
 }
 
 /*ul li {
