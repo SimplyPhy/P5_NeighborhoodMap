@@ -622,16 +622,20 @@ function trackLiIndex() {
 }
 
 
-// Knockout JS
 
 // UI
+
+
 ko.bindingHandlers.toggleClick = {
 	init: function (element, valueAccessor) {
 		var value = viewModel.navToggleBool();
 		var shift = -20;
 
-		if (window.matchMedia('(max-width: 800px)').matches)
+		if (window.matchMedia('(max-width: 750px)').matches)
 		{ shift = 0; }
+
+    if (window.matchMedia('(orientation: portrait)').matches)
+      { shift = 0; }
 
 		ko.utils.registerEventHandler(element, "click", function () {
 			$("#side_bar").animate({
@@ -640,6 +644,7 @@ ko.bindingHandlers.toggleClick = {
 			$("#top_bar").animate({
 					left: shift + "vw",
 				}, 350);
+
 			if (shift === 60) {
 				setTimeout(function(){
 					$("#top_bar").css("width", "40vw");
@@ -650,12 +655,16 @@ ko.bindingHandlers.toggleClick = {
 			}
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
-			if (!viewModel.navToggleBool()) 	{ shift = 0; }
+			if (!viewModel.navToggleBool()) 	{ shift = 0;}
 			else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 750px)').matches)
 												                { shift = 60;
                                           setTimeout(function() {
                                             viewModel.mobileScroll(true);
-                                          }, 300);}
+                                          }, 300);
+                                        }
+      else if (viewModel.navToggleBool() && window.matchMedia('(orientation: portrait)').matches) {
+                                        { shift = -30; }
+      }
 			else 							                { shift = -20; }
 		});
 	}

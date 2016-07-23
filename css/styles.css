@@ -104,10 +104,11 @@ html, body {
 	background-color: black;
 	display: inline-block;
 	width: 100%;
-	height: 8vh;
+	height: 6vh;
 	position: absolute;
 	margin-left: 20vw;
 	z-index: 1;
+	min-height: 2em;
 }
 
 .nav_button {
@@ -119,7 +120,43 @@ html, body {
 	margin-left: 27vw;
 	position: absolute;
 	z-index: 2;
-	top: 2.5vh;
+	top: 1.5vh;
 
+}
+
+/* Media Queries */
+
+@media screen and (orientation: portrait) {
+	.top_bar {
+		margin-left: 30vw;
+	}
+
+	.side_bar {
+		width: 30vw;
+	}
+}
+
+@media screen and (min-width: 751px) {
+	.top_bar {
+		height: 4vh;
+	}
+
+	.filter {
+		margin-left: 40vw;
+		top: 1.5vh;
+	}
+}
+
+@media screen and (max-width:750px) {
+  .top_bar {
+  	height: 12vh;
+  	margin-left: 0;
+  }
+
+  .side_bar {
+  	width: 60vw;
+  	z-index: 3;
+  	margin-left: -60vw;
+  }
 }
 
