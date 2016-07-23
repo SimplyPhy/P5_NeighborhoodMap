@@ -1,3 +1,12 @@
+/* ******************************************************************
+*******              Neighborhood Map Project             ***********
+*******                                                   ***********
+*******              Created By: Eric Phy                 ***********
+*******                                                   ***********
+******************************************************************* */
+
+
+// Set global variables
 var map,
 	markers = [],
 	id = [],
@@ -17,27 +26,8 @@ var map,
 	filterRadius,
 	filterButtonClear;
 
-	// TO-DO:
-	//X Add remove location button next to each list item
-	//X Make list items clickable/selectable
-	//X Add foursquare content to infoWindows for each location selected
-	//X Create dynamic side-bar containing the list and text input
-	//X Add touch functionality
-	//X make sure ui is responsive
-	//X Add error handling for API AJAX requests
 
-	// Bugs:
-	//X markerList().length = 10;
-	//X icon doesn't change on selection
-	//X markerList doesn't update the ul when new markers are added
-	//X Need to make marker disappear when item is removed from the obsArray via the remove button
-	//X (minor) when searching "churchville, pa" for a new marker, everything works, but console logs an error
-
-
-	// Current task: Submit!
-
-
-
+// Assign some global variables
 markerList = ko.observableArray([]);
 filterSpot = null;
 search = document.getElementById("searchBox");
@@ -47,6 +37,7 @@ filterRadius = document.getElementById("filterRadius");
 filterButtonClear = document.getElementById("filterButtonClear");
 filterButton = document.getElementById("filterButton");
 
+// Styles for Google Map
 styleArray =[
     {
       "featureType": "landscape",
@@ -165,9 +156,10 @@ styleArray =[
     }
 ];
 
-
+// Initiatize the Google Map
 function initMap() {
 
+  // Create the map, set some of the controls off, and set viewport to be over Doylestown, PA
 	map = new google.maps.Map(document.getElementById('map'), {
 			center: {lat: 40.31, lng: -75.185},
 			zoom: 13,
@@ -186,6 +178,7 @@ function initMap() {
 		filterBox.setBounds(map.getBounds());
 	});
 
+  // Establish marker styles
 	defaultIcon = makeMarkerIcon('B590D4');
 	highlightedIcon = makeMarkerIcon('FFFA73');
 
@@ -199,89 +192,100 @@ function initMap() {
 			var marker4 = new viewModel.Marker("California Tortilla", {lat: 40.304436, lng: -75.129210});
 			var marker5 = new viewModel.Marker("Five Ponds Golf Course", {lat: 40.219718, lng: -75.112137});
 
+      // Push initial locations in the observable array markerList
 			markerList.push(marker1);
 			markerList.push(marker2);
 			markerList.push(marker3);
 			markerList.push(marker4);
 			markerList.push(marker5);
 
+      // Set eventListeners for each initial marker
 			defaultMarkerListener(marker1);
 			defaultMarkerListener(marker2);
 			defaultMarkerListener(marker3);
 			defaultMarkerListener(marker4);
 			defaultMarkerListener(marker5);
 
+      // Establish a unique ID (0,1,2 etc) for each li in the html's side_bar ul
 			trackLiIndex();
 
 	}
 
+  // This controls most of the functionality for when a user clicks a Google Maps marker
 	function defaultMarkerListener(marker) {
 
 		marker.addListener('click', function() {
 
 			var locationsArray = locations.getElementsByTagName("li");
 
+      // Initiate infoWindow for the selected marker
 			populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
+
+      // Reset li background-colors
 			$(".li").css("background-color", "black");
 			$(".li_div").css("background-color", "black");
 
+      // Check current marker's id property and set the selectedLi observable to it
 			id = parseInt(marker.id);
 			viewModel.selectedLi(id);
 
+      // Reset all marker's icon to default
 			for(var i = 0; i < markerList().length; i++) {
 
 				markerList()[i].setIcon(defaultIcon);
 				markerList()[i].colorId = false;
 
+        // Set background-color of the li that matches the selected marker
 				if (i === id) {
 					locationsArray[i].style.backgroundColor = "#6B8C5F";
 					locationsArray[i].parentNode.style.backgroundColor = "#6B8C5F";
 				}
 			}
 
-
+      // Set current marker to highlightedIcon style
 			this.setIcon(highlightedIcon);
 			this.colorId = true;
 
 		});
 	}
 
-	// this creates the infoWindow
+	// This creates the infoWindow
 	function populateInfoWindow(marker, infowindow, image, url) {
-        if (infowindow.marker != marker) {
+
+    // Check if the infoWindow is already open
+    if (infowindow.marker != marker) {
 			infowindow.marker = marker;
 
+      // Adjust infoWindow content depending on what data foursquare returns
 			var contentDiv = 	'<div class="infoWindow">';
 			if(image && url) {
 				contentDiv +=		'<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
-									'<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
-								'</div>';
+									      '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
+								        '</div>';
 			} else if (image && !url) {
 				contentDiv +=		'<h3>'+ marker.title +'</h3>' +
-									'<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
-								'</div>';
+									      '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
+								        '</div>';
 			} else if (!image && url) {
 				contentDiv +=		'<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
-								'</div>';
+								        '</div>';
 			} else {
-				contentDiv += 		'<h3>'+ marker.title +'</h3>' +
-								'</div>';
+				contentDiv += 	'<h3>'+ marker.title +'</h3>' +
+								        '</div>';
 			}
 
-			infowindow.setContent(
-
-				contentDiv
-
-
-			);
-
+      // Set infoWindow content and open it
+			infowindow.setContent( contentDiv );
 			infowindow.open(map, marker);
+
+      // Activate Google Map's default close function for the infoWindow
 			infowindow.addListener('closeclick', function() {
 				infowindow.marker = null;
 			});
-        }
     }
+  }
 
+  // This helps ensure that markers created outside of the viewport are shifted towards when created
 	function showListings() {
 		var bounds = new google.maps.LatLngBounds();
 
@@ -294,31 +298,10 @@ function initMap() {
 		map.fitBounds(bounds);
 	}
 
-	var drawingManager = new google.maps.drawing.DrawingManager({
-		drawingMode: google.maps.drawing.OverlayType.CIRCLE,
-		drawingControl: false,
-    }); // this is the drawing initialization
-
-	/* **************************************** */
-
-	drawingManager.addListener("overlaycomplete", function(event) {
-
-		if (filterSpot) {
-			filterSpot = null;
-		}
-
-		// deactivate the hand cursor functionality
-		drawingManager.setDrawingMode(null);
-
-		filterSpot = event.overlay;
-
-		filterMap();
-
-
-	});
-
+  // This draws a circle over the map, and removes outlying markers and their corresponding li elements
 	function applyFilter(centerPoint) {
 
+    // Defines the circle to use as a visual for the filter
 		activeFilter = new google.maps.Circle({
 			strokeColor: '#D190D4',
 			strokeOpacity: 0.6,
@@ -333,69 +316,82 @@ function initMap() {
 		var currentLength = markerList().length;
 		var filterRemoveArray = [];
 
+    // Checks the distance between the Circle's origin point and the marker locations
 		for (var i = 0; i < currentLength; i++) {
 
 			var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
 
+      // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
 			if (distance > activeFilter.radius) {
 				markerList()[i].setMap(null);
 				filterRemoveArray.push(markerList()[i]);
 			}
 		}
 
-		// The following removes modifies the outlying markers
 		var currentFilteredLength = filterRemoveArray.length;
 
+    // Uses the removeButton function to completely clear out the filtered markers
 		for (var ii = 0; ii < currentFilteredLength; ii++) {
 			removeButton(filterRemoveArray[ii]);
 		}
 
+    // Resets the filtered array for next time :P
 		filterRemoveArray = [];
 
+    // Sets the state for the filter being active, and disables the ability to add another filter
 		viewModel.filter(true);
 		viewModel.searchEnable(false);
 
 		search.value = "Clear filter to use";
 		filterRadius.value += " miles";
 
+    // Calls function to enable removeFilter functionality
 		removeFilter(activeFilter);
 
 	}
 
+  // Enables the removeFilter button
 	function removeFilter(currentFilter) {
 		$("#filterButtonClear").click(function(evt) {
 
 			filter.value = "";
 			filterRadius.value = "";
-			console.log(currentFilter);
+      search.value = "";
+
 			if(currentFilter) {
 				currentFilter.setMap(null);
 			}
+      // Google Maps recommends doing this to completely remove the overlay
 			currentFilter = null;
+
+      // Set ko.js states to disable filter elements
 			viewModel.filter(false);
 			viewModel.searchEnable(true);
-			search.value = "";
 		});
 	}
 
-
+  // Call zoomToFilter when filter button is clicked
 	$("#filterButton").click(function () {
 
 			zoomToFilter();
 
 	});
 
+  // Set this function outside of the eventListener incase any other function would use it later
 	function zoomToFilter() {
-	// Initialize the geocoder.
+
+  // Initialize the geocoder.
 		var geocoder = new google.maps.Geocoder();
-		// Get the address or place that the user entered.
+
+    // Get the address or place that the user entered.
 		var address = filter.value;
-		// Make sure the address isn't blank.
+
+    // Make sure the address isn't blank.
 		if (address === '') {
 			window.alert('You must enter a place, or address.');
 		} else {
 
-			// Geocode the address/area entered to get the center. Then, center the map
+      // Geocode the address/area entered to get the center. Then, center the map
 			// on it and zoom in
 			geocoder.geocode(
 				{ address: address
@@ -413,48 +409,57 @@ function initMap() {
 		}
 	}
 
-
-
-/* **************************************** */
-
-
-
-	// Search box input and marker generation
-
-	// markerButton.addEventListener("click", addMarker, false);// 	this didn't work, because getPlaces() is
+	// markerButton.addEventListener("click", addMarker, false);// 	this doesn't work, because getPlaces() is
 	// search.addEventListener("keypress", addMarker, false);	  //	an ajax call that's designed to work with
 																                              // 	the "places_changed" event specifically
 
+  // Search box input and marker generation
 	searchBox.addListener("places_changed", addMarker);
 
 	function addMarker() {
 
+      // Google function to return auto-search locations
 			var places = searchBox.getPlaces();
 
+      // Error checking incase something doesn't work
 			if (!places) {
 				alert("Search failed: please try your search again");
 				return;
 			}
 
+      // Error checking incase an empty value is returned
 			if (places.length === 0) {
 				alert("No search Results, please try again");
 				return;
 			}
 
+      // Sets markers down for each place found, including when multiple places are found
 			places.forEach(function(place) {
 
+        // Push marker through Marker constructor
 				var marker = new viewModel.Marker(place.name, place.geometry.location);
 
+        // Add new marker to the observable array
 				markerList.push(marker);
 
+        // Set new marker listener functionality
 				defaultMarkerListener(marker);
+
+        // Assign li listener for new marker
 				listItemSelect();
 			});
+
+      // Assign new marker to a corresponding li in the side_bar *outside of loop*
 			trackLiIndex();
+
+      // Call fourSquare API function
 			setFoursquareUrl(markerList().length);
+
+      // Reset search text via observable
 			viewModel.searchActive("");
 	}
 
+  // Function to create custom marker icons (currently includes: defaultMarker and highlightedMarker)
 	function makeMarkerIcon(markerColor) {
 		var markerImage = new google.maps.MarkerImage(
 			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
@@ -467,78 +472,89 @@ function initMap() {
 		return markerImage;
 	}
 
-
+  // Make li selection active corresponding marker selection
 	function listItemSelect() {
 
-			$("li").click(function(item) {
-				var id = item.target.id;
-				var marker = markerList()[id];
+		$("li").click(function(item) {
+			var id = item.target.id;
+			var marker = markerList()[id];
 
-				$(".li").css("background-color", "black");
-				$(".li_div").css("background-color", "black");
+      // Reset li background-colors to black
+			$(".li").css("background-color", "black");
+			$(".li_div").css("background-color", "black");
 
-				populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
+      // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
+			populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
 
-				for(var i = 0; i < markerList().length; i++) {
+			for(var i = 0; i < markerList().length; i++) {
 
-					markerList()[i].setIcon(defaultIcon);
-					markerList()[i].colorId = false;
-				}
+				markerList()[i].setIcon(defaultIcon);
+				markerList()[i].colorId = false;
+			}
 
-				marker.setIcon(highlightedIcon);
-				marker.colorId = true;
+			marker.setIcon(highlightedIcon);
+			marker.colorId = true;
 
-				$(this).css("background-color", "#6B8C5F");
-				$(this).parent().css("background-color", "#6B8C5F");
+			$(this).css("background-color", "#6B8C5F");
+			$(this).parent().css("background-color", "#6B8C5F");
 
-
-				id = parseInt(id);
-				viewModel.selectedLi(id);
-			});
+			id = parseInt(id);
+			viewModel.selectedLi(id);
+		});
 
 	}
 
+  // Iniatize initial map functionality
 	defineDefaultMarkerArray();
 	showListings();
 	listItemSelect();
 
+  /* *************************************************s */
+
+  // Prepare for AJAX API calls to Foursquare
 	var thisLat,
 		thisLng,
 		thisName,
 		foursquareUrl;
 
+  // Prepare foursquare api call URL
+  // Length is set as a parameter to detect whether or not there are multiple URLs to supply or not *several wawas, for example*
 	function setFoursquareUrl(length) {
 
 		var i = markerList().length - 1;
 
+    // Only create one URL when adding a new marker
 		if (length) {
 
 			foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
-			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			// These might not work. Replace website URL
-			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
-							"&v=20130815" +
-							"&limit=1" +
-							"&radius=1000" +
-							"&intent=checkin" +
-							"&ll=" + markerList()[i].getPosition().lat() + "," + markerList()[i].getPosition().lng() +
-							"&query=" + markerList()[i].title;  // This will need to be markerList.title
+      			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			  // If these don't work, replace website URL
+      			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
+        							"&v=20130815" +
+        							"&limit=1" +
+        							"&radius=1000" +
+        							"&intent=checkin" +
+        							"&ll=" + markerList()[i].getPosition().lat() + "," + markerList()[i].getPosition().lng() +
+        							"&query=" + markerList()[i].title;
 
+      // Send completed URL to ajax call
 			ajax(foursquareUrl, i);
 
 		} else {
 
+      // Create multiple URLs when creating multiple markers
 			for (var j = 0; j <= i; j++) {
 
 				foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
-			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			// These might not work. Replace website URL
-			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
-							"&v=20130815" +
-							"&limit=1" +
-							"&radius=1000" +
-							"&intent=checkin" +
-							"&ll=" + markerList()[j].getPosition().lat() + "," + markerList()[j].getPosition().lng() +
-							"&query=" + markerList()[j].title;
+        			  				"?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +			  // If these don't work, replace website URL
+        			  				"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +		// on foursquare app to generate new codes
+          							"&v=20130815" +
+          							"&limit=1" +
+          							"&radius=1000" +
+          							"&intent=checkin" +
+          							"&ll=" + markerList()[j].getPosition().lat() + "," + markerList()[j].getPosition().lng() +
+          							"&query=" + markerList()[j].title;
 
+        // Send completed URLs to ajax call
 				ajax(foursquareUrl, j);
 			}
 		}
@@ -546,6 +562,7 @@ function initMap() {
 	}
 
 
+  // AJAX request to foursquare API for image and link information, when available
 	function ajax(FS_url, index) {
 
 		$.ajax({
@@ -554,57 +571,67 @@ function initMap() {
 
 		}).done(function(response) {
 
+      // If nothing from foursquare, stop here
 			if (!response.response.venues[0]) {
 				return;
 			}
 
+      // If request takes too long, apologize to user
 			var timeoutTest = setTimeout(function() {
 				alert("An error occurred.  Please try again!");
 			}, 3000);
 
-		    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
-			    						response.response.venues[0].id +
-			    						"/photos" +
-			    						"?v=20130815" +
-			    						"&limit=1" +
-			    						"&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
-			    						"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
+      // Create image URL request based on current marker location
+	    var foursquarePhotoUrl = 	"https://api.foursquare.com/v2/venues/" +
+		    						response.response.venues[0].id +
+		    						"/photos" +
+		    						"?v=20130815" +
+		    						"&limit=1" +
+		    						"&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
+		    						"&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
 
-		    var webUrl = response.response.venues[0].url;
-		    markerList()[index].FS_url = webUrl;
+      // Set obs array .FS_url properties to the website URL supplied by Foursquare
+	    var webUrl = response.response.venues[0].url;
+	    markerList()[index].FS_url = webUrl;
 
 
-		    $.ajax({
-		    	url: foursquarePhotoUrl,
-		    	dataType: "jsonp"
+	    $.ajax({
+	    	url: foursquarePhotoUrl,
+	    	dataType: "jsonp"
 
-		    }).done(function(photoResponse) {
+	    }).done(function(photoResponse) {
 
-		    	if(photoResponse.response.photos.items.length === 1) {
-			    	var photo = photoResponse.response.photos.items[0].prefix +
-			    				"125x125" +
-			    				photoResponse.response.photos.items[0].suffix;
+        // If a photo is found, set its URL, and resize to 125x125 pixels
+	    	if(photoResponse.response.photos.items.length === 1) {
+		    	var photo = photoResponse.response.photos.items[0].prefix +
+		    				"125x125" +
+		    				photoResponse.response.photos.items[0].suffix;
 
-		    		markerList()[index].FS_url_image = photo;
-		    	}
+          // Set obs array .FS_url_image value to photo source
+	    		markerList()[index].FS_url_image = photo;
+	    	}
 
-		    	clearTimeout(timeoutTest);
+        // Clear timeout, since AJAX call finished successfully
+	    	clearTimeout(timeoutTest);
 
-		    }).fail(function() {
-		    	alert("A problem occurred, please try your request again.");
-		    });
+      // Notify user if an error occurs
+	    }).fail(function() {
+	    	alert("A problem occurred, please try your request again.");
+	    });
 
 		}).fail(function() {
 		    alert("A problem occurred, please try your request again.");
 		});
 	}
 
-
+  // Initialize foursquare data for preset markers
 	setFoursquareUrl();
 
 } // End initMap()
 
 
+// This function sets obs array markerList objects' id property, syncing it with it's obs array index value.
+// This is used to help synchronize li elements with their corresponding marker, and vice versa.
 function trackLiIndex() {
 
 	for (var i = 0; i < markerList().length; i++) {
@@ -617,26 +644,34 @@ function trackLiIndex() {
 
 // UI
 
+// Make Google and foursquare attribution text disappear if clicked
 $(".attribution").click(function() {
   $(".attribution").fadeOut();
 });
 
+// Make Google and foursquare attribution text disappear after 8 seconds
 setTimeout(function() {
   $(".attribution").fadeOut();
 }, 8000);
 
+// This custom ko.handler tracks and adjusts the side_bar and top_bar animations depending on screen size and orientation
 ko.bindingHandlers.toggleClick = {
 	init: function (element, valueAccessor) {
 		var value = viewModel.navToggleBool();
+
+    // Set default shift value for animation positions
 		var shift = -20;
 
+    // On small screens and medium mobile screens in portrait, start shift at position 0
 		if (window.matchMedia('(max-width: 750px)').matches)
-		{ shift = 0; }
-
+		  { shift = 0; }
     if (window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches)
       { shift = 0; }
 
+    // Set click handler based on toggleClick value
 		ko.utils.registerEventHandler(element, "click", function () {
+
+      // Template animate functions, using shift as the position variable
 			$("#side_bar").animate({
 					left: shift + "vw",
 				}, 350);
@@ -644,6 +679,7 @@ ko.bindingHandlers.toggleClick = {
 					left: shift + "vw",
 				}, 350);
 
+      // Small screen adjustment
 			if (shift === 60) {
 				setTimeout(function(){
 					$("#top_bar").css("width", "40vw");
@@ -652,23 +688,32 @@ ko.bindingHandlers.toggleClick = {
 			} else {
 				$("#top_bar").css("width", "100%");
 			}
+
+      // Switch navToggleBool value (T/F)
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
+      // Check if click has been triggered yet or not
 			if (!viewModel.navToggleBool()) 	{ shift = 0;}
+
+      // Small screen shift variable controller
 			else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 750px)').matches)
 												                { shift = 60;
                                           setTimeout(function() {
                                             viewModel.mobileScroll(true);
                                           }, 300);
                                         }
+
+      // Mid-sized mobile screen, and mobile screen in portrait, adjustments
       else if (viewModel.navToggleBool() && window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches) {
                                         { shift = -30; }
       }
+      // Default shift value adjustment
 			else 							                { shift = -20; }
 		});
 	}
 };
 
+// Functionality for when removing a marker via the li removeButton
 function removeButton(marker) {
 	var thisId = marker.id;
 
@@ -678,6 +723,7 @@ function removeButton(marker) {
 	viewModel.selectedLi("");
 }
 
+// Set Knockout.js viewModel object
 var viewModel = {
 	navToggleBool: ko.observable(true),
 
@@ -689,6 +735,7 @@ var viewModel = {
 
   mobileScroll: ko.observable(true),
 
+  // This is the marker constructor for all Google Map markers
 	Marker: function(title, location) {
 		var self = this;
 
@@ -704,11 +751,12 @@ var viewModel = {
 
 		return marker;
 	}
-
 };
 
+// Checks when user has typed into the addMarker searchBox
 var searching = ko.observable(search.value.length);
 
+// This is the Knockout.js view model constructor
 function AppViewModel() {
 
 	var self = this;
@@ -716,6 +764,7 @@ function AppViewModel() {
 	self.filterSearchInput = ko.observable();
 	self.filterRadiusInput = ko.observable();
 
+  // This checks if the user has input anything into both the filter searchBox and the filter Radius box
 	self.filterReady = ko.computed(function(){
 		if (!self.filterSearchInput() || !self.filterRadiusInput()) { return false; }
 
@@ -729,4 +778,5 @@ function AppViewModel() {
 
 }
 
+// Apply KO.js
 ko.applyBindings(new AppViewModel());
