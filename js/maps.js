@@ -23,7 +23,7 @@ var map,
 	//X Add foursquare content to infoWindows for each location selected
 	//X Create dynamic side-bar containing the list and text input
 	//X Add touch functionality
-	// make sure ui is responsive
+	//X make sure ui is responsive
 	//X Add error handling for API AJAX requests
 
 	// Bugs:
@@ -31,11 +31,10 @@ var map,
 	//X icon doesn't change on selection
 	//X markerList doesn't update the ul when new markers are added
 	//X Need to make marker disappear when item is removed from the obsArray via the remove button
-	// (minor) map doesn't reposition south all the way when marker is selected south of viewport
 	//X (minor) when searching "churchville, pa" for a new marker, everything works, but console logs an error
 
 
-	// Current task: Make UI mobile friendly :D!!
+	// Current task: Submit!
 
 
 
@@ -178,12 +177,8 @@ function initMap() {
 
 	infoWindow = new google.maps.InfoWindow();
 
-	// filter = document.getElementById("filterBox");
 	filterBox = new google.maps.places.SearchBox(filter);
-
-	// search = document.getElementById("searchBox"); // now called in the global scope at top
 	searchBox = new google.maps.places.SearchBox(search);
-	// map.controls[google.maps.ControlPosition.TOP_LEFT].push(search); // Removed searchbox from google map
 
 	// Focus SearchBox results on the current map viewport
 	map.addListener('bounds_changed', function() {
@@ -305,8 +300,6 @@ function initMap() {
     }); // this is the drawing initialization
 
 	/* **************************************** */
-	// https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&latlng=40.3,-75.1
-
 
 	drawingManager.addListener("overlaycomplete", function(event) {
 
@@ -429,8 +422,8 @@ function initMap() {
 	// Search box input and marker generation
 
 	// markerButton.addEventListener("click", addMarker, false);// 	this didn't work, because getPlaces() is
-	// search.addEventListener("keypress", addMarker, false);	//	an ajax call that's designed to work with
-																// 	the "places_changed" event specifically
+	// search.addEventListener("keypress", addMarker, false);	  //	an ajax call that's designed to work with
+																                              // 	the "places_changed" event specifically
 
 	searchBox.addListener("places_changed", addMarker);
 
@@ -460,7 +453,6 @@ function initMap() {
 			trackLiIndex();
 			setFoursquareUrl(markerList().length);
 			viewModel.searchActive("");
-		// }, timeout);
 	}
 
 	function makeMarkerIcon(markerColor) {
@@ -625,16 +617,13 @@ function trackLiIndex() {
 
 // UI
 
-// $( window ).on( "orientationchange", function( event ) {
-//   $("#side_bar").css(
-//     "margin-left", "-30vw"
-//   );
-//   $("#top_bar").css(
-//     "margin-left", "0vw"
-//   );
-//   viewModel.navToggleBool(!viewModel.navToggleBool());
-// });
+$(".attribution").click(function() {
+  $(".attribution").fadeOut();
+});
 
+setTimeout(function() {
+  $(".attribution").fadeOut();
+}, 8000);
 
 ko.bindingHandlers.toggleClick = {
 	init: function (element, valueAccessor) {
@@ -644,7 +633,7 @@ ko.bindingHandlers.toggleClick = {
 		if (window.matchMedia('(max-width: 750px)').matches)
 		{ shift = 0; }
 
-    if (window.matchMedia('(orientation: portrait)').matches)
+    if (window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches)
       { shift = 0; }
 
 		ko.utils.registerEventHandler(element, "click", function () {
@@ -672,7 +661,7 @@ ko.bindingHandlers.toggleClick = {
                                             viewModel.mobileScroll(true);
                                           }, 300);
                                         }
-      else if (viewModel.navToggleBool() && window.matchMedia('(orientation: portrait)').matches) {
+      else if (viewModel.navToggleBool() && window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches) {
                                         { shift = -30; }
       }
 			else 							                { shift = -20; }
@@ -741,16 +730,3 @@ function AppViewModel() {
 }
 
 ko.applyBindings(new AppViewModel());
-
-
-// Fixes scrolling overflow on mobile
-// var fixedSide = document.getElementById('side_bar');
-// var fixedTop = document.getElementById('top_bar');
-
-// fixedSide.addEventListener('touchmove', function(e) {
-//         e.preventDefault();
-// }, false);
-
-// fixedTop.addEventListener('touchmove', function(e) {
-//         e.preventDefault();
-// }, false);

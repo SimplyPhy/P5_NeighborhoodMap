@@ -124,9 +124,18 @@ html, body {
 
 }
 
+.attribution {
+	position: absolute;
+	left: 21vw;
+	bottom: 2vh;
+	z-index: 3;
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
 /* Media Queries */
 
-@media screen and (orientation: portrait) {
+@media screen and (min-width: 751px) and (max-width: 1150px), (orientation: portrait) {
 	.top_bar {
 		margin-left: 30vw;
 	}
@@ -134,9 +143,18 @@ html, body {
 	.side_bar {
 		width: 30vw;
 	}
+
+	.filter {
+		margin-left: 40vw;
+		top: 1.5vh;
+	}
+
+	.attribution {
+		left: 31vw;
+	}
 }
 
-@media screen and (min-width: 751px) {
+@media screen and (min-width: 1151px) {
 	.top_bar {
 		height: 4vh;
 	}
@@ -158,5 +176,13 @@ html, body {
   	z-index: 3;
   	margin-left: -60vw;
   }
+  .attribution {
+		left: 1vw;
+	}
 }
 
+@media screen and (orientation: portrait) and (max-width:350px), screen and (orientation: landscape) and (max-width: 600px) {
+	.top_bar {
+		height: 16vh;
+	}
+}

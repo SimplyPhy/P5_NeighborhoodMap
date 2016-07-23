@@ -5,14 +5,6 @@
 	<meta charset="UTF-8">
 	<title>Udacity Maps Course</title>
 	<link rel="stylesheet" href="css/styles.css">
-	<!-- <link rel="stylesheet" media="screen and (max-width:750px)" href="css/mobile.css"> -->
-	<style>
-		html, body {
-			height: 100%;
-			margin: 0;
-			padding: 0;
-		}
-	</style>
 </head>
 <body>
 
@@ -41,6 +33,12 @@
 		<button data-bind="	visible: !viewModel.filter(), enable: $root.filterReady" id="filterButton" type="button">Add Filter</button>
 		<button data-bind="visible: viewModel.filter()" id="filterButtonClear" type="button">Clear Filter</button>
 
+	</div>
+
+	<div class="attribution">
+		<p>
+			Location information supplied by Google and Foursquare APIs
+		</p>
 	</div>
 
 	<div id="map" class="map"></div>
