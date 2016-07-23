@@ -625,6 +625,16 @@ function trackLiIndex() {
 
 // UI
 
+// $( window ).on( "orientationchange", function( event ) {
+//   $("#side_bar").css(
+//     "margin-left", "-30vw"
+//   );
+//   $("#top_bar").css(
+//     "margin-left", "0vw"
+//   );
+//   viewModel.navToggleBool(!viewModel.navToggleBool());
+// });
+
 
 ko.bindingHandlers.toggleClick = {
 	init: function (element, valueAccessor) {
