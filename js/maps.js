@@ -50,29 +50,29 @@ filterButton = document.getElementById("filterButton");
 
 styleArray =[
     {
-        "featureType": "landscape",
-        "stylers": [
-            {
-                "hue": "#FFBB00"
-            },
-            {
-                "saturation": 43.4
-            },
-            {
-                "lightness": 37.6
-            },
-            {
-                "gamma": 1
-            }
-        ]
+      "featureType": "landscape",
+      "stylers": [
+        {
+            "hue": "#FFBB00"
+        },
+        {
+            "saturation": 43.4
+        },
+        {
+            "lightness": 37.6
+        },
+        {
+            "gamma": 1
+        }
+      ]
     },
     {
-		"featureType": "road",
-		"elementType": "labels",
-		"stylers": [
-			{ "visibility": "off" }
-		]
-	},
+    "featureType": "road",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+   },
     {
         "featureType": "road.highway",
         "stylers": [
@@ -125,11 +125,11 @@ styleArray =[
         ]
     },
     {
-		"featureType": "transit",
-		"stylers": [
-			{ "visibility": "off" }
-		]
-	},
+    "featureType": "transit",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+   },
     {
         "featureType": "water",
         "stylers": [
@@ -644,15 +644,19 @@ ko.bindingHandlers.toggleClick = {
 				setTimeout(function(){
 					$("#top_bar").css("width", "40vw");
 				}, 400);
+        viewModel.mobileScroll(false);
 			} else {
 				$("#top_bar").css("width", "100%");
 			}
 			viewModel.navToggleBool(!viewModel.navToggleBool());
 
-			if (!viewModel.navToggleBool()) 	{ shift = 0;   }
-			else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 800px)').matches)
-												{ shift = 60; }
-			else 								{ shift = -20; }
+			if (!viewModel.navToggleBool()) 	{ shift = 0; }
+			else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 750px)').matches)
+												                { shift = 60;
+                                          setTimeout(function() {
+                                            viewModel.mobileScroll(true);
+                                          }, 300);}
+			else 							                { shift = -20; }
 		});
 	}
 };
@@ -675,8 +679,7 @@ var viewModel = {
 	selectedLi: ko.observable(),
 	filter: ko.observable(),
 
-	// filterSearchInput: ko.observable(filter.value),
-	// filterRadiusInput: ko.observable(filterRadius.value),
+  mobileScroll: ko.observable(true),
 
 	Marker: function(title, location) {
 		var self = this;
