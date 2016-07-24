@@ -10,3 +10,7 @@ ___
 4. Apply filters to your Google Map via the top search box.
     1. Add a filter radius, in miles (e.g. 4), in the filter radius search box.
 5. Play around and enjoy!
+
+####Easy way to load:
+
+The site is hosted [here](https://simplyphy.github.io/P5_NeighborhoodMap/).
