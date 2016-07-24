@@ -10,7 +10,7 @@
 
 	<div id="side_bar" class="side_bar">
 		<div class="add_marker">
-			<input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Select a new location">
+			<input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Add a new location">
 		</div>
 
 		<ul data-bind="foreach: markerList" id="locations" class="locations">
@@ -27,10 +27,10 @@
 
 	<div id="filter" class="filter" data-bind="visible: viewModel.mobileScroll()">
 
-		<input data-bind="enable: !viewModel.filter(), textInput: $root.filterSearchInput, visible: viewModel.mobileScroll()" id="filterBox" type="text" placeholder="Filter the markers">
-		<input 	data-bind="	enable: !viewModel.filter(), textInput: $root.filterRadiusInput" id="filterRadius" type="text" placeholder="Search radius (in miles)">
+		<input data-bind="enable: !viewModel.filter(), textInput: viewModel.filterSearchInput, visible: viewModel.mobileScroll()" id="filterBox" type="text" placeholder="Filter the markers">
+		<input 	data-bind="	enable: !viewModel.filter(), textInput: viewModel.filterRadiusInput" id="filterRadius" type="text" placeholder="Search radius (in miles)">
 
-		<button data-bind="	visible: !viewModel.filter(), enable: $root.filterReady" id="filterButton" type="button">Add Filter</button>
+		<button data-bind="	visible: !viewModel.filter(), enable: viewModel.filterReady" id="filterButton" type="button">Add Filter</button>
 		<button data-bind="visible: viewModel.filter()" id="filterButtonClear" type="button">Clear Filter</button>
 
 	</div>
@@ -49,6 +49,6 @@
 	<script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.0.js"></script>
 	<script src="js/maps.js"></script>
 
-	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry,places&key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&callback=initMap"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry,places&key=AIzaSyB3TDBhlOLkHGkU6zqQ6PQjp2AL_AlLpd0&callback=initMap" onerror="googleError()"></script>
 </body>
 </html>
