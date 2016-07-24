@@ -33,7 +33,7 @@
 		<input 	data-bind="	enable: !viewModel.filter(), textInput: viewModel.filterRadiusInput" id="filterRadius" type="text" placeholder="Search radius (in miles)">
 
 		<button data-bind="	visible: !viewModel.filter(), enable: viewModel.filterReady" id="filterButton" type="button">Add Filter</button>
-		<button data-bind="visible: viewModel.filter()" id="filterButtonClear" type="button">Clear Filter</button>
+		<button data-bind="visible: viewModel.filter(), click: filterReset()" id="filterButtonClear" type="button">Clear Filter</button>
 
 	</div>
 

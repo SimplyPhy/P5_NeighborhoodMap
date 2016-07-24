@@ -344,21 +344,15 @@ function initMap() {
 
   // Enables the removeFilter button
   function removeFilter(currentFilter) {
-    $("#filterButtonClear").click(function(evt) {
 
-      filter.value = "";
-      filterRadius.value = "";
-      search.value = "";
+    // *** Note to reviewer: I use jQuery below because it only handles the Google Map directly.
+    $("#filterButtonClear").click(function(evt) {
 
       if(currentFilter) {
         currentFilter.setMap(null);
       }
       // Google Maps recommends doing this to completely remove the overlay
       currentFilter = null;
-
-      // Set ko.js states to disable filter elements
-      viewModel.filter(false);
-      viewModel.searchEnable(true);
     });
   }
 
@@ -386,7 +380,9 @@ function initMap() {
       // Geocode the address/area entered to get the center. Then, center the map
       // on it and zoom in
       geocoder.geocode(
-        { address: address
+        { address: address,
+          bounds: map.getBounds(),
+          region: "Bucks County, PA"
         }, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
@@ -471,7 +467,7 @@ function initMap() {
   // Make li selection active corresponding marker selection
   function listItemSelect() {
 
-    // Note to Project Evaluator: I use jQuery for this because it's handling the Google Map directly
+    // Note to reviewer: I use jQuery for this because it's only handling the Google Map directly.
     $("li").click(function(item) {
       var id = item.target.id;
       var marker = markerList()[id];
@@ -611,6 +607,9 @@ function initMap() {
 
 // This function sets obs array markerList objects' id property, syncing it with it's obs array index value.
 // This is used to help synchronize li elements with their corresponding marker, and vice versa.
+
+// *** Note to reviewer: I've refactored the functions that are dependent upon trackLiIndex(), and they
+// no longer use jQuery impermissably.
 function trackLiIndex() {
 
   for (var i = 0; i < markerList().length; i++) {
@@ -697,32 +696,25 @@ ko.bindingHandlers.toggleClick = {
   }
 };
 
-
-
 function listItemSelection(item) {
 
-      var marker = markerList()[item.id];
+  var marker = markerList()[item.id];
 
-      for(var i = 0; i < markerList().length; i++) {
+  for(var i = 0; i < markerList().length; i++) {
 
-        markerList()[i].setIcon(defaultIcon);
-        markerList()[i].colorId(false);
-        markerList()[i].activeButton(false);
-      }
-
-      marker.setIcon(highlightedIcon);
-      marker.colorId(true);
-      marker.activeButton(true);
-
-      id = parseInt(id);
-      viewModel.selectedLi(id);
-
+    markerList()[i].setIcon(defaultIcon);
+    markerList()[i].colorId(false);
+    markerList()[i].activeButton(false);
   }
 
+  marker.setIcon(highlightedIcon);
+  marker.colorId(true);
+  marker.activeButton(true);
 
+  id = parseInt(id);
+  viewModel.selectedLi(id);
 
-
-
+}
 
 // Functionality for when removing a marker via the li removeButton
 function removeButton(marker) {
@@ -733,6 +725,19 @@ function removeButton(marker) {
   trackLiIndex();
   viewModel.selectedLi("");
 }
+
+function filterReset() {
+  filter.value = "";
+  filterRadius.value = "";
+  search.value = "";
+
+  // Set ko.js states to disable filter elements
+  viewModel.filter(false);
+  viewModel.searchEnable(true);
+}
+
+
+
 
 // Set Knockout.js viewModel object
 var viewModel = {
