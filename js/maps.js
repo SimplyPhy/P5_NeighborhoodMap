@@ -469,10 +469,6 @@ function initMap() {
       var id = item.target.id;
       var marker = markerList()[id];
 
-      // Reset li background-colors to black
-      $(".li").css("background-color", "black");
-      $(".li_div").css("background-color", "black");
-
       // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
       populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
 
@@ -484,9 +480,6 @@ function initMap() {
 
       marker.setIcon(highlightedIcon);
       marker.colorId(true);
-
-      $(this).css("background-color", "#6B8C5F");
-      $(this).parent().css("background-color", "#6B8C5F");
 
       id = parseInt(id);
       viewModel.selectedLi(id);
