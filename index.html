@@ -14,8 +14,8 @@
 		</div>
 
 		<ul data-bind="foreach: markerList" id="locations" class="locations">
-			<div class="li_div">
-				<li data-bind="text: title" class="li"></li>
+			<div class="li_div" data-bind="style: { backgroundColor: $data.colorId() ? '#6B8C5F' : 'black' }">
+				<li data-bind="text: title, style: { backgroundColor: $data.colorId() ? '#6B8C5F' : 'black' }" class="li"></li>
 			</div>
 			<button type="button" data-bind="click: removeButton, visible: viewModel.selectedLi() === $index()" class="removeMarker">Remove</button>
 		</ul>

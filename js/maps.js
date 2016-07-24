@@ -221,10 +221,6 @@ function initMap() {
       // Initiate infoWindow for the selected marker
       populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 
-      // Reset li background-colors
-      $(".li").css("background-color", "black");
-      $(".li_div").css("background-color", "black");
-
       // Check current marker's id property and set the selectedLi observable to it
       id = parseInt(marker.id);
       viewModel.selectedLi(id);
@@ -233,18 +229,12 @@ function initMap() {
       for(var i = 0; i < markerList().length; i++) {
 
         markerList()[i].setIcon(defaultIcon);
-        markerList()[i].colorId = false;
-
-        // Set background-color of the li that matches the selected marker
-        if (i === id) {
-          locationsArray[i].style.backgroundColor = "#6B8C5F";
-          locationsArray[i].parentNode.style.backgroundColor = "#6B8C5F";
-        }
+        markerList()[i].colorId(false);
       }
 
       // Set current marker to highlightedIcon style
       this.setIcon(highlightedIcon);
-      this.colorId = true;
+      this.colorId(true);
 
     });
   }
@@ -489,11 +479,11 @@ function initMap() {
       for(var i = 0; i < markerList().length; i++) {
 
         markerList()[i].setIcon(defaultIcon);
-        markerList()[i].colorId = false;
+        markerList()[i].colorId(false);
       }
 
       marker.setIcon(highlightedIcon);
-      marker.colorId = true;
+      marker.colorId(true);
 
       $(this).css("background-color", "#6B8C5F");
       $(this).parent().css("background-color", "#6B8C5F");
@@ -750,7 +740,7 @@ var viewModel = {
       position: location,
       icon: defaultIcon,
       animation: google.maps.Animation.DROP,
-      colorId: false,
+      colorId: ko.observable(false),
       customLatLng: location
     });
 
@@ -765,13 +755,13 @@ var viewModel = {
     if (!viewModel.filterSearchInput() || !viewModel.filterRadiusInput()) {
       return false;
     }
-
     if ( viewModel.filterSearchInput().length && viewModel.filterRadiusInput()) {
       return true;
     } else {
       return false;
     }
   })
+
 };
 
 // Apply KO.js
