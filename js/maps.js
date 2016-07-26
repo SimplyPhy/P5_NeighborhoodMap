@@ -18,7 +18,6 @@ var map,
   removeMarker,
   defaultIcon,
   highlightedIcon,
-  markerList,
   styleArray,
   locations,
   filter,
@@ -28,7 +27,6 @@ var map,
 
 
 // Assign some global variables
-markerList = ko.observableArray([]);
 filterSpot = null;
 search = document.getElementById("searchBox");
 locations = document.getElementById("locations");
@@ -192,12 +190,12 @@ function initMap() {
       var marker4 = new viewModel.Marker("California Tortilla", {lat: 40.304436, lng: -75.129210});
       var marker5 = new viewModel.Marker("Five Ponds Golf Course", {lat: 40.219718, lng: -75.112137});
 
-      // Push initial locations in the observable array markerList
-      markerList.push(marker1);
-      markerList.push(marker2);
-      markerList.push(marker3);
-      markerList.push(marker4);
-      markerList.push(marker5);
+      // Push initial locations in the observable array viewModel.markerList
+      viewModel.markerList.push(marker1);
+      viewModel.markerList.push(marker2);
+      viewModel.markerList.push(marker3);
+      viewModel.markerList.push(marker4);
+      viewModel.markerList.push(marker5);
 
       // Set eventListeners for each initial marker
       defaultMarkerListener(marker1);
@@ -226,11 +224,11 @@ function initMap() {
       viewModel.selectedLi(id);
 
       // Reset all marker's icon to default
-      for(var i = 0; i < markerList().length; i++) {
+      for(var i = 0; i < viewModel.markerList().length; i++) {
 
-        markerList()[i].setIcon(defaultIcon);
-        markerList()[i].colorId(false);
-        markerList()[i].activeButton(false);
+        viewModel.markerList()[i].setIcon(defaultIcon);
+        viewModel.markerList()[i].colorId(false);
+        viewModel.markerList()[i].activeButton(false);
       }
 
       // Set current marker to highlightedIcon style
@@ -281,10 +279,10 @@ function initMap() {
   function showListings() {
     var bounds = new google.maps.LatLngBounds();
 
-    for (var i = 0; i < markerList().length; i++) {
+    for (var i = 0; i < viewModel.markerList().length; i++) {
 
-      markerList()[i].setMap(map);
-      bounds.extend(markerList()[i].position);
+      viewModel.markerList()[i].setMap(map);
+      bounds.extend(viewModel.markerList()[i].position);
     }
 
     map.fitBounds(bounds);
@@ -305,18 +303,18 @@ function initMap() {
       radius: parseInt(filterRadius.value) * 1609.34
     });
 
-    var currentLength = markerList().length;
+    var currentLength = viewModel.markerList().length;
     var filterRemoveArray = [];
 
     // Checks the distance between the Circle's origin point and the marker locations
     for (var i = 0; i < currentLength; i++) {
 
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(markerList()[i].position, centerPoint);
+      var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
 
       // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
       if (distance > activeFilter.radius) {
-        markerList()[i].setMap(null);
-        filterRemoveArray.push(markerList()[i]);
+        viewModel.markerList()[i].setMap(null);
+        filterRemoveArray.push(viewModel.markerList()[i]);
       }
     }
 
@@ -432,7 +430,7 @@ function initMap() {
         var marker = new viewModel.Marker(place.name, place.geometry.location, id);
 
         // Add new marker to the observable array
-        markerList.push(marker);
+        viewModel.markerList.push(marker);
 
         // Set new marker listener functionality
         defaultMarkerListener(marker);
@@ -445,7 +443,7 @@ function initMap() {
       trackLiIndex();
 
       // Call fourSquare API function
-      setFoursquareUrl(markerList().length);
+      setFoursquareUrl(viewModel.markerList().length);
 
       // Reset search text via observable
       viewModel.searchActive("");
@@ -470,7 +468,7 @@ function initMap() {
     // Note to reviewer: I use jQuery for this because it's only handling the Google Map directly.
     $("li").click(function(item) {
       var id = item.target.id;
-      var marker = markerList()[id];
+      var marker = viewModel.markerList()[id];
 
       // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
       populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
@@ -496,7 +494,7 @@ function initMap() {
   // Length is set as a parameter to detect whether or not there are multiple URLs to supply or not *several wawas, for example*
   function setFoursquareUrl(length) {
 
-    var i = markerList().length - 1;
+    var i = viewModel.markerList().length - 1;
 
     // Only create one URL when adding a new marker
     if (length) {
@@ -508,8 +506,8 @@ function initMap() {
                       "&limit=1" +
                       "&radius=1000" +
                       "&intent=checkin" +
-                      "&ll=" + markerList()[i].getPosition().lat() + "," + markerList()[i].getPosition().lng() +
-                      "&query=" + markerList()[i].title;
+                      "&ll=" + viewModel.markerList()[i].getPosition().lat() + "," + viewModel.markerList()[i].getPosition().lng() +
+                      "&query=" + viewModel.markerList()[i].title;
 
       // Send completed URL to ajax call
       ajax(foursquareUrl, i);
@@ -526,8 +524,8 @@ function initMap() {
                         "&limit=1" +
                         "&radius=1000" +
                         "&intent=checkin" +
-                        "&ll=" + markerList()[j].getPosition().lat() + "," + markerList()[j].getPosition().lng() +
-                        "&query=" + markerList()[j].title;
+                        "&ll=" + viewModel.markerList()[j].getPosition().lat() + "," + viewModel.markerList()[j].getPosition().lng() +
+                        "&query=" + viewModel.markerList()[j].title;
 
         // Send completed URLs to ajax call
         ajax(foursquareUrl, j);
@@ -567,7 +565,7 @@ function initMap() {
 
       // Set obs array .FS_url properties to the website URL supplied by Foursquare
       var webUrl = response.response.venues[0].url;
-      markerList()[index].FS_url = webUrl;
+      viewModel.markerList()[index].FS_url = webUrl;
 
 
       $.ajax({
@@ -583,7 +581,7 @@ function initMap() {
                 photoResponse.response.photos.items[0].suffix;
 
           // Set obs array .FS_url_image value to photo source
-          markerList()[index].FS_url_image = photo;
+          viewModel.markerList()[index].FS_url_image = photo;
         }
 
         // Clear timeout, since AJAX call finished successfully
@@ -605,16 +603,16 @@ function initMap() {
 } // End initMap()
 
 
-// This function sets obs array markerList objects' id property, syncing it with it's obs array index value.
+// This function sets obs array viewModel.markerList objects' id property, syncing it with it's obs array index value.
 // This is used to help synchronize li elements with their corresponding marker, and vice versa.
 
 // *** Note to reviewer: I've refactored the functions that are dependent upon trackLiIndex(), and they
 // no longer use jQuery impermissably.
 function trackLiIndex() {
 
-  for (var i = 0; i < markerList().length; i++) {
+  for (var i = 0; i < viewModel.markerList().length; i++) {
     $("ul li:eq(" + i + ")").attr("id", i);
-    markerList()[i].id = i;
+    viewModel.markerList()[i].id = i;
   }
 }
 
@@ -698,13 +696,13 @@ ko.bindingHandlers.toggleClick = {
 
 function listItemSelection(item) {
 
-  var marker = markerList()[item.id];
+  var marker = viewModel.markerList()[item.id];
 
-  for(var i = 0; i < markerList().length; i++) {
+  for(var i = 0; i < viewModel.markerList().length; i++) {
 
-    markerList()[i].setIcon(defaultIcon);
-    markerList()[i].colorId(false);
-    markerList()[i].activeButton(false);
+    viewModel.markerList()[i].setIcon(defaultIcon);
+    viewModel.markerList()[i].colorId(false);
+    viewModel.markerList()[i].activeButton(false);
   }
 
   marker.setIcon(highlightedIcon);
@@ -721,7 +719,7 @@ function removeButton(marker) {
   var thisId = marker.id;
 
   marker.setMap(null);
-  markerList.remove(marker);
+  viewModel.markerList.remove(marker);
   trackLiIndex();
   viewModel.selectedLi("");
 }
@@ -741,6 +739,9 @@ function filterReset() {
 
 // Set Knockout.js viewModel object
 var viewModel = {
+
+  markerList: ko.observableArray([]),
+
   navToggleBool: ko.observable(true),
 
   searchActive: ko.observable(""),
