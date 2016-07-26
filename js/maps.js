@@ -214,8 +214,6 @@ function initMap() {
 
     marker.addListener('click', function() {
 
-      // var locationsArray = locations.getElementsByTagName("li");
-
       // Initiate infoWindow for the selected marker
       populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
 
