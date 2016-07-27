@@ -165,8 +165,6 @@ function initMap() {
       mapTypeControl: false
       });
 
-  infoWindow = new google.maps.InfoWindow();
-
   filterBox = new google.maps.places.SearchBox(filter);
   searchBox = new google.maps.places.SearchBox(search);
 
@@ -215,7 +213,7 @@ function initMap() {
     marker.addListener('click', function() {
 
       // Initiate infoWindow for the selected marker
-      populateInfoWindow(this, infoWindow, this.FS_url_image, this.FS_url);
+      populateInfoWindow(this);
 
       // Check current marker's id property and set the selectedLi observable to it
       id = parseInt(marker.id);
@@ -238,40 +236,47 @@ function initMap() {
   }
 
   // This creates the infoWindow
-  function populateInfoWindow(marker, infowindow, image, url) {
+  // function populateInfoWindow(marker, infowindow, image, url, title) {
 
-    // Check if the infoWindow is already open
-    if (infowindow.marker != marker) {
-      infowindow.marker = marker;
+  //   // Check if the infoWindow is already open
+  //   if (infowindow.marker != marker) {
+  //     infowindow.marker = marker;
 
-      // Adjust infoWindow content depending on what data foursquare returns
-      var contentDiv =  '<div class="infoWindow">';
-      if(image && url) {
-        contentDiv +=   '<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
-                        '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
-                        '</div>';
-      } else if (image && !url) {
-        contentDiv +=    '<h3>'+ marker.title +'</h3>' +
-                        '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
-                        '</div>';
-      } else if (!image && url) {
-        contentDiv +=   '<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
-                        '</div>';
-      } else {
-        contentDiv +=   '<h3>'+ marker.title +'</h3>' +
-                        '</div>';
-      }
+  //     // Adjust infoWindow content depending on what data foursquare returns
+  //     var contentDiv =  '<div class="infoWindow">';
+  //     if(image && url) {
+  //       contentDiv +=   '<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
+  //                       '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
+  //                       '</div>';
+  //     } else if (image && !url) {
+  //       contentDiv +=    '<h3>'+ marker.title +'</h3>' +
+  //                       '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
+  //                       '</div>';
+  //     } else if (!image && url) {
+  //       contentDiv +=   '<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
+  //                       '</div>';
+  //     } else {
+  //       contentDiv +=   '<h3>'+ marker.title +'</h3>' +
+  //                       '</div>';
+  //     }
 
-      // Set infoWindow content and open it
-      infowindow.setContent( contentDiv );
-      infowindow.open(map, marker);
+  //     // Set infoWindow content and open it
+  //     infowindow.setContent( contentDiv );
+  //     infowindow.open(map, marker);
 
-      // Activate Google Map's default close function for the infoWindow
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-      });
-    }
-  }
+  //     // Activate Google Map's default close function for the infoWindow
+  //     infowindow.addListener('closeclick', function() {
+  //       infowindow.marker = null;
+  //     });
+
+  //     for (var i = 0; i < viewModel.markerList().length; i++) {
+  //       if (viewModel.markerList()[i].title == title.toString()) {
+  //         viewModel.markerList()[i].infowindow = infowindow;
+  //       }
+
+  //     }
+  //   }
+  // }
 
   // This helps ensure that markers created outside of the viewport are shifted towards when created
   function showListings() {
@@ -342,7 +347,7 @@ function initMap() {
   function removeFilter(currentFilter) {
 
     // *** Note to reviewer: I use jQuery below because it only handles the Google Map directly.
-    $("#filterButtonClear").click(function(evt) {
+    $("#filterButtonClear").click(function() {
 
       if(currentFilter) {
         currentFilter.setMap(null);
@@ -469,7 +474,7 @@ function initMap() {
       var marker = viewModel.markerList()[id];
 
       // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
-      populateInfoWindow(marker, infoWindow, marker.FS_url_image, marker.FS_url);
+      populateInfoWindow(marker);
 
     });
 
@@ -614,12 +619,69 @@ function trackLiIndex() {
   }
 }
 
+/* *************************************************************************** */
+
 // Alert user when Google Map fails to load (called in html script tag)
 function googleError() {
   alert("Google Maps failed to load.  Please refresh the page to try again.");
 }
 
 
+// This creates the infoWindow
+function populateInfoWindow(marker) {
+
+  var infowindow,
+      image = marker.FS_url_image,
+      url = marker.FS_url,
+      title = marker.title;
+
+  // Check if the infoWindow is already open
+  console.log(marker.infowindow);
+  if(marker.infowindow) {
+      marker.infowindow.close();
+  }
+
+  for (var j = 0; j < viewModel.markerList().length; j++) {
+    if (viewModel.markerList()[j].infowindow) {
+      viewModel.markerList()[j].infowindow.close();
+    }
+  }
+
+    // Adjust infoWindow content depending on what data foursquare returns
+    var contentDiv =  '<div class="infoWindow">';
+    if(image && url) {
+      contentDiv +=   '<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
+                      '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
+                      '</div>';
+    } else if (image && !url) {
+      contentDiv +=   '<h3>'+ marker.title +'</h3>' +
+                      '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
+                      '</div>';
+    } else if (!image && url) {
+      contentDiv +=   '<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
+                      '</div>';
+    } else {
+      contentDiv +=   '<h3>'+ marker.title +'</h3>' +
+                      '</div>';
+    }
+
+    // Set infoWindow content and open it
+
+    infowindow = new google.maps.InfoWindow();
+    infowindow.setContent( contentDiv );
+    infowindow.open(map, marker);
+
+    // Activate Google Map's default close function for the infoWindow
+    infowindow.addListener('closeclick', function() {
+      infowindow.marker = null;
+    });
+
+    for (var i = 0; i < viewModel.markerList().length; i++) {
+      if (viewModel.markerList()[i].title == title.toString()) {
+        viewModel.markerList()[i].infowindow = infowindow;
+      }
+    }
+}
 
 // UI
 
@@ -709,6 +771,9 @@ function listItemSelection(item) {
 
   id = parseInt(id);
   viewModel.selectedLi(id);
+
+
+
 
 }
 
