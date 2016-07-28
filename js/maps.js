@@ -202,9 +202,6 @@ function initMap() {
       defaultMarkerListener(marker4);
       defaultMarkerListener(marker5);
 
-      // Establish a unique ID (0,1,2 etc) for each li in the html's side_bar ul
-      trackLiIndex();
-
   }
 
   // This controls most of the functionality for when a user clicks a Google Maps marker
@@ -248,113 +245,6 @@ function initMap() {
     map.fitBounds(bounds);
   }
 
-  // // This draws a circle over the map, and removes outlying markers and their corresponding li elements
-  // function applyFilter(centerPoint) {
-
-  //   // Defines the circle to use as a visual for the filter
-  //   activeFilter = new google.maps.Circle({
-  //     strokeColor: '#D190D4',
-  //     strokeOpacity: 0.6,
-  //     strokeWeight: 2,
-  //     fillColor: '#D190D4',
-  //     fillOpacity: 0.15,
-  //     map: map,
-  //     center: centerPoint,
-  //     radius: parseInt(filterRadius.value) * 1609.34
-  //   });
-
-  //   var currentLength = viewModel.markerList().length;
-  //   var filterRemoveArray = [];
-
-  //   // Checks the distance between the Circle's origin point and the marker locations
-  //   for (var i = 0; i < currentLength; i++) {
-
-  //     var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
-
-  //     // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
-  //     if (distance > activeFilter.radius) {
-  //       viewModel.markerList()[i].setMap(null);
-  //       filterRemoveArray.push(viewModel.markerList()[i]);
-  //     }
-  //   }
-
-  //   var currentFilteredLength = filterRemoveArray.length;
-
-  //   // Uses the removeButton function to completely clear out the filtered markers
-  //   for (var ii = 0; ii < currentFilteredLength; ii++) {
-  //     removeButton(filterRemoveArray[ii]);
-  //   }
-
-  //   // Resets the filtered array for next time :P
-  //   filterRemoveArray = [];
-
-  //   // Sets the state for the filter being active, and disables the ability to add another filter
-  //   viewModel.filter(true);
-  //   viewModel.searchEnable(false);
-
-  //   search.value = "Clear filter to use";
-  //   filterRadius.value = parseInt(filterRadius.value) + " miles";
-
-  //   // Calls function to enable removeFilter functionality
-  //   removeFilter(activeFilter);
-
-  // }
-
-  // // Enables the removeFilter button
-  // function removeFilter(currentFilter) {
-
-  //   // *** Note to reviewer: I use jQuery below because it only handles the Google Map directly.
-  //   $("#filterButtonClear").click(function() {
-
-  //     if(currentFilter) {
-  //       currentFilter.setMap(null);
-  //     }
-  //     // Google Maps recommends doing this to completely remove the overlay
-  //     currentFilter = null;
-  //   });
-  // }
-
-  // Call zoomToFilter when filter button is clicked
-  // $("#filterButton").click(function () {
-
-  //     zoomToFilter();
-
-  // });
-
-  // // Set this function outside of the eventListener incase any other function would use it later
-  // function zoomToFilter() {
-
-  // // Initialize the geocoder.
-  //   var geocoder = new google.maps.Geocoder();
-
-  //   // Get the address or place that the user entered.
-  //   var address = filter.value;
-
-  //   // Make sure the address isn't blank.
-  //   if (address === '') {
-  //     window.alert('You must enter a place, or address.');
-  //   } else {
-
-  //     // Geocode the address/area entered to get the center. Then, center the map
-  //     // on it and zoom in
-  //     geocoder.geocode(
-  //       { address: address,
-  //         bounds: map.getBounds(),
-  //         region: "Bucks County, PA"
-  //       }, function(results, status) {
-  //         if (status == google.maps.GeocoderStatus.OK) {
-  //           map.setCenter(results[0].geometry.location);
-  //           var centerPoint = results[0].geometry.location;
-  //           applyFilter(centerPoint);
-  //           map.setZoom(12);
-  //         } else {
-  //           window.alert('We could not find that location - try entering a more' +
-  //           ' specific place.');
-  //       }
-  //     });
-  //   }
-  // }
-
   // markerButton.addEventListener("click", addMarker, false); //   this doesn't work, because getPlaces() is
   // search.addEventListener("keypress", addMarker, false);    //  an ajax call that's designed to work with
                                                                //   the "places_changed" event specifically
@@ -395,9 +285,6 @@ function initMap() {
         // Set new marker listener functionality
         defaultMarkerListener(marker);
       });
-
-      // Assign new marker to a corresponding li in the side_bar *outside of loop*
-      trackLiIndex();
 
       // Call fourSquare API function
       setFoursquareUrl(viewModel.markerList().length);
@@ -541,58 +428,16 @@ function initMap() {
   // Initialize foursquare data for preset markers
   setFoursquareUrl();
 
+  // Apply KO.js
+  ko.applyBindings(viewModel);
+
 } // End initMap()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// This function sets obs array viewModel.markerList objects' id property, syncing it with it's obs array index value.
-// This is used to help synchronize li elements with their corresponding marker, and vice versa.
-
-// *** Note to reviewer: I've refactored the functions that are dependent upon trackLiIndex(), and they
-// no longer use jQuery impermissably.
-function trackLiIndex() {
-
-  for (var i = 0; i < viewModel.markerList().length; i++) {
-    $("ul li:eq(" + i + ")").attr("id", i);
-    viewModel.markerList()[i].id = i;
-  }
-}
-
-/* *************************************************************************** */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Alert user when Google Map fails to load (called in html script tag)
 function googleError() {
   alert("Google Maps failed to load.  Please refresh the page to try again.");
 }
-
 
 // This creates the infoWindow
 function populateInfoWindow(marker) {
@@ -632,7 +477,6 @@ function populateInfoWindow(marker) {
     }
 
     // Set infoWindow content and open it
-
     infowindow = new google.maps.InfoWindow();
     infowindow.setContent( contentDiv );
     infowindow.open(map, marker);
@@ -649,19 +493,8 @@ function populateInfoWindow(marker) {
     }
 }
 
+
 // UI
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Set this function outside of the eventListener incase any other function would use it later
@@ -766,16 +599,6 @@ function populateInfoWindow(marker) {
       viewModel.searchEnable(true);
   }
 
-
-
-
-
-
-
-
-
-
-
 // Make Google and foursquare attribution text disappear if clicked
 $(".attribution").click(function() {
   $(".attribution").fadeOut();
@@ -847,8 +670,6 @@ ko.bindingHandlers.toggleClick = {
 
 function listItemSelection(item) {
 
-  var marker = viewModel.markerList()[item.id];
-
   for(var i = 0; i < viewModel.markerList().length; i++) {
 
     viewModel.markerList()[i].setIcon(defaultIcon);
@@ -856,15 +677,11 @@ function listItemSelection(item) {
     viewModel.markerList()[i].activeButton(false);
   }
 
-  marker.setIcon(highlightedIcon);
-  marker.colorId(true);
-  marker.activeButton(true);
-
-  id = parseInt(id);
-  viewModel.selectedLi(id);
+  item.setIcon(highlightedIcon);
+  item.colorId(true);
+  item.activeButton(true);
 
   populateInfoWindow(item);
-
 
 }
 
@@ -874,11 +691,8 @@ function removeButton(marker) {
 
   marker.setMap(null);
   viewModel.markerList.remove(marker);
-  trackLiIndex();
   viewModel.selectedLi("");
 }
-
-
 
 
 // Set Knockout.js viewModel object
@@ -933,5 +747,4 @@ var viewModel = {
 };
 
 // Apply KO.js
-ko.applyBindings(viewModel);
-
+// ko.applyBindings(viewModel);
