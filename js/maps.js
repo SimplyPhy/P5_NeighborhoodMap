@@ -422,20 +422,33 @@ function initMap() {
     return markerImage;
   }
 
-  // Make li selection active corresponding marker selection
-  function listItemSelect() {
 
-    // Note to reviewer: I use jQuery for this because it's only handling the Google Map directly.
-    $("li").click(function(item) {
-      var id = item.target.id;
-      var marker = viewModel.markerList()[id];
 
-      // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
-      populateInfoWindow(marker);
 
-    });
 
-  }
+
+
+
+
+
+
+
+
+
+  // // Make li selection active corresponding marker selection
+  // function listItemSelect() {
+
+  //   // Note to reviewer: I use jQuery for this because it's only handling the Google Map directly.
+  //   $("li").click(function(item) {
+  //     var id = item.target.id;
+  //     var marker = viewModel.markerList()[id];
+
+  //     // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
+  //     populateInfoWindow(marker);
+
+  //   });
+
+  // }
 
   // Iniatize initial map functionality
   defineDefaultMarkerArray();
@@ -563,6 +576,21 @@ function initMap() {
 } // End initMap()
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // This function sets obs array viewModel.markerList objects' id property, syncing it with it's obs array index value.
 // This is used to help synchronize li elements with their corresponding marker, and vice versa.
 
@@ -578,6 +606,20 @@ function trackLiIndex() {
 
 /* *************************************************************************** */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Alert user when Google Map fails to load (called in html script tag)
 function googleError() {
   alert("Google Maps failed to load.  Please refresh the page to try again.");
@@ -586,6 +628,8 @@ function googleError() {
 
 // This creates the infoWindow
 function populateInfoWindow(marker) {
+
+  console.log(marker);
 
   var infowindow,
       image = marker.FS_url_image,
@@ -640,6 +684,9 @@ function populateInfoWindow(marker) {
 }
 
 // UI
+
+
+
 
 
 
@@ -839,6 +886,8 @@ ko.bindingHandlers.toggleClick = {
 
 function listItemSelection(item) {
 
+  console.log(item);
+
   var marker = viewModel.markerList()[item.id];
 
   for(var i = 0; i < viewModel.markerList().length; i++) {
@@ -855,7 +904,7 @@ function listItemSelection(item) {
   id = parseInt(id);
   viewModel.selectedLi(id);
 
-
+  populateInfoWindow(item);
 
 
 }
