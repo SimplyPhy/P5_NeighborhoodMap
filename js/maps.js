@@ -235,49 +235,6 @@ function initMap() {
     });
   }
 
-  // This creates the infoWindow
-  // function populateInfoWindow(marker, infowindow, image, url, title) {
-
-  //   // Check if the infoWindow is already open
-  //   if (infowindow.marker != marker) {
-  //     infowindow.marker = marker;
-
-  //     // Adjust infoWindow content depending on what data foursquare returns
-  //     var contentDiv =  '<div class="infoWindow">';
-  //     if(image && url) {
-  //       contentDiv +=   '<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
-  //                       '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
-  //                       '</div>';
-  //     } else if (image && !url) {
-  //       contentDiv +=    '<h3>'+ marker.title +'</h3>' +
-  //                       '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
-  //                       '</div>';
-  //     } else if (!image && url) {
-  //       contentDiv +=   '<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
-  //                       '</div>';
-  //     } else {
-  //       contentDiv +=   '<h3>'+ marker.title +'</h3>' +
-  //                       '</div>';
-  //     }
-
-  //     // Set infoWindow content and open it
-  //     infowindow.setContent( contentDiv );
-  //     infowindow.open(map, marker);
-
-  //     // Activate Google Map's default close function for the infoWindow
-  //     infowindow.addListener('closeclick', function() {
-  //       infowindow.marker = null;
-  //     });
-
-  //     for (var i = 0; i < viewModel.markerList().length; i++) {
-  //       if (viewModel.markerList()[i].title == title.toString()) {
-  //         viewModel.markerList()[i].infowindow = infowindow;
-  //       }
-
-  //     }
-  //   }
-  // }
-
   // This helps ensure that markers created outside of the viewport are shifted towards when created
   function showListings() {
     var bounds = new google.maps.LatLngBounds();
@@ -291,112 +248,112 @@ function initMap() {
     map.fitBounds(bounds);
   }
 
-  // This draws a circle over the map, and removes outlying markers and their corresponding li elements
-  function applyFilter(centerPoint) {
+  // // This draws a circle over the map, and removes outlying markers and their corresponding li elements
+  // function applyFilter(centerPoint) {
 
-    // Defines the circle to use as a visual for the filter
-    activeFilter = new google.maps.Circle({
-      strokeColor: '#D190D4',
-      strokeOpacity: 0.6,
-      strokeWeight: 2,
-      fillColor: '#D190D4',
-      fillOpacity: 0.15,
-      map: map,
-      center: centerPoint,
-      radius: parseInt(filterRadius.value) * 1609.34
-    });
+  //   // Defines the circle to use as a visual for the filter
+  //   activeFilter = new google.maps.Circle({
+  //     strokeColor: '#D190D4',
+  //     strokeOpacity: 0.6,
+  //     strokeWeight: 2,
+  //     fillColor: '#D190D4',
+  //     fillOpacity: 0.15,
+  //     map: map,
+  //     center: centerPoint,
+  //     radius: parseInt(filterRadius.value) * 1609.34
+  //   });
 
-    var currentLength = viewModel.markerList().length;
-    var filterRemoveArray = [];
+  //   var currentLength = viewModel.markerList().length;
+  //   var filterRemoveArray = [];
 
-    // Checks the distance between the Circle's origin point and the marker locations
-    for (var i = 0; i < currentLength; i++) {
+  //   // Checks the distance between the Circle's origin point and the marker locations
+  //   for (var i = 0; i < currentLength; i++) {
 
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
+  //     var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
 
-      // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
-      if (distance > activeFilter.radius) {
-        viewModel.markerList()[i].setMap(null);
-        filterRemoveArray.push(viewModel.markerList()[i]);
-      }
-    }
+  //     // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
+  //     if (distance > activeFilter.radius) {
+  //       viewModel.markerList()[i].setMap(null);
+  //       filterRemoveArray.push(viewModel.markerList()[i]);
+  //     }
+  //   }
 
-    var currentFilteredLength = filterRemoveArray.length;
+  //   var currentFilteredLength = filterRemoveArray.length;
 
-    // Uses the removeButton function to completely clear out the filtered markers
-    for (var ii = 0; ii < currentFilteredLength; ii++) {
-      removeButton(filterRemoveArray[ii]);
-    }
+  //   // Uses the removeButton function to completely clear out the filtered markers
+  //   for (var ii = 0; ii < currentFilteredLength; ii++) {
+  //     removeButton(filterRemoveArray[ii]);
+  //   }
 
-    // Resets the filtered array for next time :P
-    filterRemoveArray = [];
+  //   // Resets the filtered array for next time :P
+  //   filterRemoveArray = [];
 
-    // Sets the state for the filter being active, and disables the ability to add another filter
-    viewModel.filter(true);
-    viewModel.searchEnable(false);
+  //   // Sets the state for the filter being active, and disables the ability to add another filter
+  //   viewModel.filter(true);
+  //   viewModel.searchEnable(false);
 
-    search.value = "Clear filter to use";
-    filterRadius.value = parseInt(filterRadius.value) + " miles";
+  //   search.value = "Clear filter to use";
+  //   filterRadius.value = parseInt(filterRadius.value) + " miles";
 
-    // Calls function to enable removeFilter functionality
-    removeFilter(activeFilter);
+  //   // Calls function to enable removeFilter functionality
+  //   removeFilter(activeFilter);
 
-  }
+  // }
 
-  // Enables the removeFilter button
-  function removeFilter(currentFilter) {
+  // // Enables the removeFilter button
+  // function removeFilter(currentFilter) {
 
-    // *** Note to reviewer: I use jQuery below because it only handles the Google Map directly.
-    $("#filterButtonClear").click(function() {
+  //   // *** Note to reviewer: I use jQuery below because it only handles the Google Map directly.
+  //   $("#filterButtonClear").click(function() {
 
-      if(currentFilter) {
-        currentFilter.setMap(null);
-      }
-      // Google Maps recommends doing this to completely remove the overlay
-      currentFilter = null;
-    });
-  }
+  //     if(currentFilter) {
+  //       currentFilter.setMap(null);
+  //     }
+  //     // Google Maps recommends doing this to completely remove the overlay
+  //     currentFilter = null;
+  //   });
+  // }
 
   // Call zoomToFilter when filter button is clicked
-  $("#filterButton").click(function () {
+  // $("#filterButton").click(function () {
 
-      zoomToFilter();
+  //     zoomToFilter();
 
-  });
+  // });
 
-  // Set this function outside of the eventListener incase any other function would use it later
-  function zoomToFilter() {
+  // // Set this function outside of the eventListener incase any other function would use it later
+  // function zoomToFilter() {
 
-  // Initialize the geocoder.
-    var geocoder = new google.maps.Geocoder();
+  // // Initialize the geocoder.
+  //   var geocoder = new google.maps.Geocoder();
 
-    // Get the address or place that the user entered.
-    var address = filter.value;
+  //   // Get the address or place that the user entered.
+  //   var address = filter.value;
 
-    // Make sure the address isn't blank.
-    if (address === '') {
-      window.alert('You must enter a place, or address.');
-    } else {
+  //   // Make sure the address isn't blank.
+  //   if (address === '') {
+  //     window.alert('You must enter a place, or address.');
+  //   } else {
 
-      // Geocode the address/area entered to get the center. Then, center the map
-      // on it and zoom in
-      geocoder.geocode(
-        { address: address,
-          bounds: map.getBounds(),
-          region: "Bucks County, PA"
-        }, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            var centerPoint = results[0].geometry.location;
-            applyFilter(centerPoint);
-            map.setZoom(12);
-          } else {
-            window.alert('We could not find that location - try entering a more' +
-            ' specific place.');
-        }
-      });
-    }
-  }
+  //     // Geocode the address/area entered to get the center. Then, center the map
+  //     // on it and zoom in
+  //     geocoder.geocode(
+  //       { address: address,
+  //         bounds: map.getBounds(),
+  //         region: "Bucks County, PA"
+  //       }, function(results, status) {
+  //         if (status == google.maps.GeocoderStatus.OK) {
+  //           map.setCenter(results[0].geometry.location);
+  //           var centerPoint = results[0].geometry.location;
+  //           applyFilter(centerPoint);
+  //           map.setZoom(12);
+  //         } else {
+  //           window.alert('We could not find that location - try entering a more' +
+  //           ' specific place.');
+  //       }
+  //     });
+  //   }
+  // }
 
   // markerButton.addEventListener("click", addMarker, false); //   this doesn't work, because getPlaces() is
   // search.addEventListener("keypress", addMarker, false);    //  an ajax call that's designed to work with
@@ -636,7 +593,6 @@ function populateInfoWindow(marker) {
       title = marker.title;
 
   // Check if the infoWindow is already open
-  console.log(marker.infowindow);
   if(marker.infowindow) {
       marker.infowindow.close();
   }
@@ -684,6 +640,133 @@ function populateInfoWindow(marker) {
 }
 
 // UI
+
+
+
+
+
+
+
+
+
+
+
+// Set this function outside of the eventListener incase any other function would use it later
+  function zoomToFilter() {
+
+  // Initialize the geocoder.
+    var geocoder = new google.maps.Geocoder();
+
+    // Get the address or place that the user entered.
+    var address = filter.value;
+        console.log("happy");
+
+    // Make sure the address isn't blank.
+    if (address === '') {
+      window.alert('You must enter a place, or address.');
+    } else {
+
+      // Geocode the address/area entered to get the center. Then, center the map
+      // on it and zoom in
+      geocoder.geocode(
+        { address: address,
+          bounds: map.getBounds(),
+          region: "Bucks County, PA"
+        }, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            map.setCenter(results[0].geometry.location);
+            var centerPoint = results[0].geometry.location;
+            applyFilter(centerPoint);
+            map.setZoom(12);
+          } else {
+            window.alert('We could not find that location - try entering a more' +
+            ' specific place.');
+        }
+      });
+    }
+  }
+
+// This draws a circle over the map, and removes outlying markers and their corresponding li elements
+  function applyFilter(centerPoint) {
+
+    console.log("happier");
+
+    // Defines the circle to use as a visual for the filter
+    activeFilter = new google.maps.Circle({
+      strokeColor: '#D190D4',
+      strokeOpacity: 0.6,
+      strokeWeight: 2,
+      fillColor: '#D190D4',
+      fillOpacity: 0.15,
+      map: map,
+      center: centerPoint,
+      radius: parseInt(filterRadius.value) * 1609.34
+    });
+
+    var currentLength = viewModel.markerList().length;
+    var filterRemoveArray = [];
+
+    // Checks the distance between the Circle's origin point and the marker locations
+    for (var i = 0; i < currentLength; i++) {
+
+      console.log("happierier");
+
+      var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
+
+      // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
+      if (distance > activeFilter.radius) {
+        viewModel.markerList()[i].setMap(null);
+        filterRemoveArray.push(viewModel.markerList()[i]);
+      }
+    }
+
+    var currentFilteredLength = filterRemoveArray.length;
+
+    // Uses the removeButton function to completely clear out the filtered markers
+    for (var ii = 0; ii < currentFilteredLength; ii++) {
+      removeButton(filterRemoveArray[ii]);
+    }
+
+    // Resets the filtered array for next time :P
+    filterRemoveArray = [];
+
+    // Sets the state for the filter being active, and disables the ability to add another filter
+    viewModel.filter(true);
+    viewModel.searchEnable(false);
+
+    search.value = "Clear filter to use";
+    filterRadius.value = parseInt(filterRadius.value) + " miles";
+
+  }
+
+
+// Enables the removeFilter button
+  function removeFilter() {
+
+      if(activeFilter) {
+        activeFilter.setMap(null);
+      }
+      // Google Maps recommends doing this to completely remove the overlay
+      activeFilter = null;
+
+      filter.value = "";
+      filterRadius.value = "";
+      search.value = "";
+
+      // Set ko.js states to disable filter elements
+      viewModel.filter(false);
+      viewModel.searchEnable(true);
+  }
+
+
+
+
+
+
+
+
+
+
 
 // Make Google and foursquare attribution text disappear if clicked
 $(".attribution").click(function() {
@@ -787,33 +870,11 @@ function removeButton(marker) {
   viewModel.selectedLi("");
 }
 
-function filterReset() {
-  filter.value = "";
-  filterRadius.value = "";
-  search.value = "";
-
-  // Set ko.js states to disable filter elements
-  viewModel.filter(false);
-  viewModel.searchEnable(true);
-}
-
 
 
 
 // Set Knockout.js viewModel object
 var viewModel = {
-
-  markerList: ko.observableArray([]),
-
-  navToggleBool: ko.observable(true),
-
-  searchActive: ko.observable(""),
-  searchEnable: ko.observable(true),
-
-  selectedLi: ko.observable(),
-  filter: ko.observable(),
-
-  mobileScroll: ko.observable(true),
 
   // This is the marker constructor for all Google Map markers
   Marker: function(title, location, id) {
@@ -833,6 +894,18 @@ var viewModel = {
 
     return marker;
   },
+
+  markerList: ko.observableArray([]),
+
+  navToggleBool: ko.observable(true),
+
+  searchActive: ko.observable(""),
+  searchEnable: ko.observable(true),
+
+  selectedLi: ko.observable(),
+  filter: ko.observable(),
+
+  mobileScroll: ko.observable(true),
 
   filterSearchInput: ko.observable(),
   filterRadiusInput: ko.observable(),
