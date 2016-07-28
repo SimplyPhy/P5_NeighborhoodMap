@@ -13,13 +13,16 @@
   <div id="side_bar" class="side_bar">
     <div class="add_marker">
       <input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Add a new location">
+      <input data-bind="textInput: viewModel.textFilter, enable: !viewModel.textFilterActive()" type="text" placeholder="List filter">
+      <button data-bind="click: viewModel.textFilterOn, visible: !viewModel.textFilterActive()">Filter</button>
+      <button data-bind="click: viewModel.textFilterOff, visible: viewModel.textFilterActive()">Clear</button>
     </div>
 
     <ul data-bind="foreach: markerList" id="locations" class="locations">
       <div class="li_div" data-bind="style: { backgroundColor: $data.colorId() ? '#6B8C5F' : 'black' }">
-        <li data-bind="text: title, style: { backgroundColor: $data.colorId() ? '#6B8C5F' : 'black' }, click: listItemSelection" class="li"></li>
+        <li data-bind="text: title, style: { backgroundColor: $data.colorId() ? '#6B8C5F' : 'black' }, click: viewModel.listItemSelection, visible: $data.activeList()" class="li"></li>
       </div>
-      <button type="button" data-bind="click: removeButton, visible: $data.activeButton()" class="removeMarker">Remove</button>
+      <button type="button" data-bind="click: viewModel.removeButton, visible: $data.activeButton()" class="removeMarker">Remove</button>
     </ul>
 
 
@@ -33,8 +36,8 @@
     <input data-bind="enable: !viewModel.filter(), textInput: viewModel.filterSearchInput, visible: viewModel.mobileScroll()" id="filterBox" type="text" placeholder="Filter the markers">
     <input data-bind="	enable: !viewModel.filter(), textInput: viewModel.filterRadiusInput" id="filterRadius" type="text" placeholder="Search radius (in miles)">
 
-    <button data-bind="	visible: !viewModel.filter(), enable: viewModel.filterReady, click: zoomToFilter" id="filterButton" type="button">Add Filter</button>
-    <button data-bind="visible: viewModel.filter(), click: removeFilter" id="filterButtonClear" type="button">Clear Filter</button>
+    <button data-bind="	visible: !viewModel.filter(), enable: viewModel.filterReady, click: viewModel.zoomToFilter" id="filterButton" type="button">Add Filter</button>
+    <button data-bind="visible: viewModel.filter(), click: viewModel.removeFilter" id="filterButtonClear" type="button">Clear Filter</button>
 
   </div>
 
