@@ -394,9 +394,6 @@ function initMap() {
 
         // Set new marker listener functionality
         defaultMarkerListener(marker);
-
-        // Assign li listener for new marker
-        listItemSelect();
       });
 
       // Assign new marker to a corresponding li in the side_bar *outside of loop*
@@ -422,38 +419,9 @@ function initMap() {
     return markerImage;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // // Make li selection active corresponding marker selection
-  // function listItemSelect() {
-
-  //   // Note to reviewer: I use jQuery for this because it's only handling the Google Map directly.
-  //   $("li").click(function(item) {
-  //     var id = item.target.id;
-  //     var marker = viewModel.markerList()[id];
-
-  //     // The following mimics functionality from when a user selects a marker (see defaultMarkerListener())
-  //     populateInfoWindow(marker);
-
-  //   });
-
-  // }
-
   // Iniatize initial map functionality
   defineDefaultMarkerArray();
   showListings();
-  listItemSelect();
 
   /* *************************************************s */
 
@@ -629,8 +597,6 @@ function googleError() {
 // This creates the infoWindow
 function populateInfoWindow(marker) {
 
-  console.log(marker);
-
   var infowindow,
       image = marker.FS_url_image,
       url = marker.FS_url,
@@ -706,7 +672,6 @@ function populateInfoWindow(marker) {
 
     // Get the address or place that the user entered.
     var address = filter.value;
-        console.log("happy");
 
     // Make sure the address isn't blank.
     if (address === '') {
@@ -736,8 +701,6 @@ function populateInfoWindow(marker) {
 // This draws a circle over the map, and removes outlying markers and their corresponding li elements
   function applyFilter(centerPoint) {
 
-    console.log("happier");
-
     // Defines the circle to use as a visual for the filter
     activeFilter = new google.maps.Circle({
       strokeColor: '#D190D4',
@@ -755,8 +718,6 @@ function populateInfoWindow(marker) {
 
     // Checks the distance between the Circle's origin point and the marker locations
     for (var i = 0; i < currentLength; i++) {
-
-      console.log("happierier");
 
       var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
 
@@ -885,8 +846,6 @@ ko.bindingHandlers.toggleClick = {
 };
 
 function listItemSelection(item) {
-
-  console.log(item);
 
   var marker = viewModel.markerList()[item.id];
 
