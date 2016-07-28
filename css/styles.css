@@ -90,6 +90,9 @@ body {
     z-index: 2;
     top: 1.5vh;
 }
+.text_filter {
+		display: block;
+}
 .attribution {
     position: absolute;
     left: 21vw;

@@ -13,9 +13,11 @@
   <div id="side_bar" class="side_bar">
     <div class="add_marker">
       <input data-bind="textInput: viewModel.searchActive, enable: viewModel.searchEnable" id="searchBox" type="text" placeholder="Add a new location">
-      <input data-bind="textInput: viewModel.textFilter, enable: !viewModel.textFilterActive()" type="text" placeholder="List filter">
-      <button data-bind="click: viewModel.textFilterOn, visible: !viewModel.textFilterActive()">Filter</button>
-      <button data-bind="click: viewModel.textFilterOff, visible: viewModel.textFilterActive()">Clear</button>
+      <div class="text_filter">
+	      <input data-bind="textInput: viewModel.textFilter, enable: !viewModel.textFilterActive()" type="text" placeholder="List filter">
+	      <button data-bind="click: viewModel.textFilterOn, visible: !viewModel.textFilterActive()">Filter</button>
+	      <button data-bind="click: viewModel.textFilterOff, visible: viewModel.textFilterActive()">Clear</button>
+    	</div>
     </div>
 
     <ul data-bind="foreach: markerList" id="locations" class="locations">
