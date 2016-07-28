@@ -3,161 +3,145 @@
    License: none (public domain)
 */
 
-html, body, div,
-h1, p, a, ol,
-ul, li {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+html,
+body,
+div,
+h1,
+p,
+a,
+ol,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
-
 body {
-	line-height: 1;
+    line-height: 1;
 }
-
 ol,
 ul {
-	list-style: none;
+    list-style: none;
 }
-
 /* end inported styles */
 
 html,
 body {
-	height: 100%;
-	max-width: 100%;
-	overflow: hidden;
+    height: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
-
 .map {
-	height: 100%;
+    height: 100%;
 }
-
 .side_bar {
-	background-color: black;
-	position: absolute;
-	width: 20vw;
-	height: 100%;
-	z-index: 1;
-	overflow: hidden;
-	overflow-y: auto;
+    background-color: black;
+    position: absolute;
+    width: 20vw;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    overflow-y: auto;
 }
-
 .add_marker {
-	position: relative;
-	top: 2vh;
-	left: 1.5em;
+    position: relative;
+    top: 2vh;
+    left: 1.5em;
 }
-
 .locations {
-	position: relative;
-	top: 5vh;
+    position: relative;
+    top: 5vh;
 }
-
 .li {
-	color: white;
-	width: 100%;
-	position: relative;
-	left: 1.5em;
-	padding: .2em 0 .2em 0;
+    color: white;
+    width: 100%;
+    position: relative;
+    left: 1.5em;
+    padding: .2em 0 .2em 0;
 }
-
 .li_div {
-	padding: .2em 0 .2em 0;
+    padding: .2em 0 .2em 0;
 }
-
 .removeMarker {
-	margin: .1em 0 .1em 0;
-	position: relative;
-	left: 2em;
+    margin: .1em 0 .1em 0;
+    position: relative;
+    left: 2em;
 }
-
 .top_bar {
-	background-color: black;
-	display: inline-block;
-	width: 100%;
-	height: 6vh;
-	position: absolute;
-	margin-left: 20vw;
-	z-index: 1;
-	min-height: 2em;
+    background-color: black;
+    display: inline-block;
+    width: 100%;
+    height: 6vh;
+    position: absolute;
+    margin-left: 20vw;
+    z-index: 1;
+    min-height: 2em;
 }
-
 .nav_button {
-	max-height: 100%;
+    max-height: 100%;
 }
-
 .filter {
-	display: inline-block;
-	margin-left: 27vw;
-	position: absolute;
-	z-index: 2;
-	top: 1.5vh;
-
+    display: inline-block;
+    margin-left: 27vw;
+    position: absolute;
+    z-index: 2;
+    top: 1.5vh;
 }
-
 .attribution {
-	position: absolute;
-	left: 21vw;
-	bottom: 2vh;
-	z-index: 3;
-	font-weight: bold;
-	font-size: 1.2em;
+    position: absolute;
+    left: 21vw;
+    bottom: 2vh;
+    z-index: 3;
+    font-weight: bold;
+    font-size: 1.2em;
 }
-
 /* Media Queries */
 
-@media screen and (min-width: 751px) and (max-width: 1150px), (orientation: portrait) {
-	.top_bar {
-		margin-left: 30vw;
-	}
-
-	.side_bar {
-		width: 30vw;
-	}
-
-	.filter {
-		margin-left: 40vw;
-		top: 1.5vh;
-	}
-
-	.attribution {
-		left: 31vw;
-	}
+@media screen and (min-width: 751px) and (max-width: 1150px),
+(orientation: portrait) {
+    .top_bar {
+        margin-left: 30vw;
+    }
+    .side_bar {
+        width: 30vw;
+    }
+    .filter {
+        margin-left: 40vw;
+        top: 1.5vh;
+    }
+    .attribution {
+        left: 31vw;
+    }
 }
-
 @media screen and (min-width: 1151px) {
-	.top_bar {
-		height: 4vh;
-	}
-
-	.filter {
-		margin-left: 40vw;
-		top: 1.5vh;
-	}
+    .top_bar {
+        height: 4vh;
+    }
+    .filter {
+        margin-left: 40vw;
+        top: 1.5vh;
+    }
 }
-
-@media screen and (max-width:750px) {
-  .top_bar {
-  	height: 12vh;
-  	margin-left: 0;
-  }
-
-  .side_bar {
-  	width: 60vw;
-  	z-index: 3;
-  	margin-left: -60vw;
-  }
-  .attribution {
-		left: 1vw;
-	}
+@media screen and (max-width: 750px) {
+    .top_bar {
+        height: 12vh;
+        margin-left: 0;
+    }
+    .side_bar {
+        width: 60vw;
+        z-index: 3;
+        margin-left: -60vw;
+    }
+    .attribution {
+        left: 1vw;
+    }
 }
-
-@media screen and (orientation: portrait) and (max-width:350px), screen and (orientation: landscape) and (max-width: 600px) {
-	.top_bar {
-		height: 16vh;
-	}
+@media screen and (orientation: portrait) and (max-width: 350px),
+screen and (orientation: landscape) and (max-width: 600px) {
+    .top_bar {
+        height: 16vh;
+    }
 }

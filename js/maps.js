@@ -1,10 +1,9 @@
 /* ******************************************************************
-*******              Neighborhood Map Project             ***********
-*******                                                   ***********
-*******              Created By: Eric Phy                 ***********
-*******                                                   ***********
-******************************************************************* */
-
+ *******              Neighborhood Map Project             ***********
+ *******                                                   ***********
+ *******              Created By: Eric Phy                 ***********
+ *******                                                   ***********
+ ******************************************************************* */
 
 // Set global variables
 var map,
@@ -36,134 +35,98 @@ filterButtonClear = document.getElementById("filterButtonClear");
 filterButton = document.getElementById("filterButton");
 
 // Styles for Google Map
-styleArray =[
-    {
-      "featureType": "landscape",
-      "stylers": [
-        {
-            "hue": "#FFBB00"
-        },
-        {
-            "saturation": 43.4
-        },
-        {
-            "lightness": 37.6
-        },
-        {
-            "gamma": 1
-        }
-      ]
-    },
-    {
-    "featureType": "road",
-    "elementType": "labels",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-   },
-    {
-        "featureType": "road.highway",
-        "stylers": [
-            {
-                "hue": "#FFC200"
-            },
-            {
-                "saturation": -61.8
-            },
-            {
-                "lightness": 45.6
-            },
-            {
-                "gamma": 1
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "stylers": [
-            {
-                "hue": "#FF0300"
-            },
-            {
-                "saturation": -100
-            },
-            {
-                "lightness": 51.2
-            },
-            {
-                "gamma": 1
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "stylers": [
-            {
-                "hue": "#FF0300"
-            },
-            {
-                "saturation": -100
-            },
-            {
-                "lightness": 52
-            },
-            {
-                "gamma": 1
-            }
-        ]
-    },
-    {
-    "featureType": "transit",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-   },
-    {
-        "featureType": "water",
-        "stylers": [
-            {
-                "hue": "#0078FF"
-            },
-            {
-                "saturation": -13.2
-            },
-            {
-                "lightness": 2.4
-            },
-            {
-                "gamma": 1
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "stylers": [
-            {
-                "hue": "#00FF6A"
-            },
-            {
-                "saturation": -1.1
-            },
-            {
-                "lightness": 11
-            },
-            {
-                "gamma": 1
-            }
-        ]
-    }
-];
+styleArray = [{
+  "featureType": "landscape",
+  "stylers": [{
+    "hue": "#FFBB00"
+  }, {
+    "saturation": 43.4
+  }, {
+    "lightness": 37.6
+  }, {
+    "gamma": 1
+  }]
+}, {
+  "featureType": "road",
+  "elementType": "labels",
+  "stylers": [{
+    "visibility": "off"
+  }]
+}, {
+  "featureType": "road.highway",
+  "stylers": [{
+    "hue": "#FFC200"
+  }, {
+    "saturation": -61.8
+  }, {
+    "lightness": 45.6
+  }, {
+    "gamma": 1
+  }]
+}, {
+  "featureType": "road.arterial",
+  "stylers": [{
+    "hue": "#FF0300"
+  }, {
+    "saturation": -100
+  }, {
+    "lightness": 51.2
+  }, {
+    "gamma": 1
+  }]
+}, {
+  "featureType": "road.local",
+  "stylers": [{
+    "hue": "#FF0300"
+  }, {
+    "saturation": -100
+  }, {
+    "lightness": 52
+  }, {
+    "gamma": 1
+  }]
+}, {
+  "featureType": "transit",
+  "stylers": [{
+    "visibility": "off"
+  }]
+}, {
+  "featureType": "water",
+  "stylers": [{
+    "hue": "#0078FF"
+  }, {
+    "saturation": -13.2
+  }, {
+    "lightness": 2.4
+  }, {
+    "gamma": 1
+  }]
+}, {
+  "featureType": "poi",
+  "stylers": [{
+    "hue": "#00FF6A"
+  }, {
+    "saturation": -1.1
+  }, {
+    "lightness": 11
+  }, {
+    "gamma": 1
+  }]
+}];
 
 // Initiatize the Google Map
 function initMap() {
 
   // Create the map, set some of the controls off, and set viewport to be over Doylestown, PA
   map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.31, lng: -75.185},
-      zoom: 13,
-      styles: styleArray,
-      mapTypeControl: false
-      });
+    center: {
+      lat: 40.31,
+      lng: -75.185
+    },
+    zoom: 13,
+    styles: styleArray,
+    mapTypeControl: false
+  });
 
   filterBox = new google.maps.places.SearchBox(filter);
   searchBox = new google.maps.places.SearchBox(search);
@@ -179,28 +142,43 @@ function initMap() {
   highlightedIcon = makeMarkerIcon('FFFA73');
 
   // Generates default markers on the google map
-  function defineDefaultMarkerArray(){
+  function defineDefaultMarkerArray() {
 
-      // Hard coded initial Google Map markers
-      var marker1 = new viewModel.Marker("Doylestown Starbucks", {lat: 40.310323, lng: -75.130746});
-      var marker2 = new viewModel.Marker("Central Bucks Family YMCA", {lat: 40.303162, lng: -75.140643});
-      var marker3 = new viewModel.Marker("Peace Valley Park", {lat: 40.329817, lng: -75.192421});
-      var marker4 = new viewModel.Marker("California Tortilla", {lat: 40.304436, lng: -75.129210});
-      var marker5 = new viewModel.Marker("Five Ponds Golf Course", {lat: 40.219718, lng: -75.112137});
+    // Hard coded initial Google Map markers
+    var marker1 = new viewModel.Marker("Doylestown Starbucks", {
+      lat: 40.310323,
+      lng: -75.130746
+    });
+    var marker2 = new viewModel.Marker("Central Bucks Family YMCA", {
+      lat: 40.303162,
+      lng: -75.140643
+    });
+    var marker3 = new viewModel.Marker("Peace Valley Park", {
+      lat: 40.329817,
+      lng: -75.192421
+    });
+    var marker4 = new viewModel.Marker("California Tortilla", {
+      lat: 40.304436,
+      lng: -75.129210
+    });
+    var marker5 = new viewModel.Marker("Five Ponds Golf Course", {
+      lat: 40.219718,
+      lng: -75.112137
+    });
 
-      // Push initial locations in the observable array viewModel.markerList
-      viewModel.markerList.push(marker1);
-      viewModel.markerList.push(marker2);
-      viewModel.markerList.push(marker3);
-      viewModel.markerList.push(marker4);
-      viewModel.markerList.push(marker5);
+    // Push initial locations in the observable array viewModel.markerList
+    viewModel.markerList.push(marker1);
+    viewModel.markerList.push(marker2);
+    viewModel.markerList.push(marker3);
+    viewModel.markerList.push(marker4);
+    viewModel.markerList.push(marker5);
 
-      // Set eventListeners for each initial marker
-      defaultMarkerListener(marker1);
-      defaultMarkerListener(marker2);
-      defaultMarkerListener(marker3);
-      defaultMarkerListener(marker4);
-      defaultMarkerListener(marker5);
+    // Set eventListeners for each initial marker
+    defaultMarkerListener(marker1);
+    defaultMarkerListener(marker2);
+    defaultMarkerListener(marker3);
+    defaultMarkerListener(marker4);
+    defaultMarkerListener(marker5);
 
   }
 
@@ -217,7 +195,7 @@ function initMap() {
       viewModel.selectedLi(id);
 
       // Reset all marker's icon to default
-      for(var i = 0; i < viewModel.markerList().length; i++) {
+      for (var i = 0; i < viewModel.markerList().length; i++) {
 
         viewModel.markerList()[i].setIcon(defaultIcon);
         viewModel.markerList()[i].colorId(false);
@@ -247,50 +225,46 @@ function initMap() {
 
   // markerButton.addEventListener("click", addMarker, false); //   this doesn't work, because getPlaces() is
   // search.addEventListener("keypress", addMarker, false);    //  an ajax call that's designed to work with
-                                                               //   the "places_changed" event specifically
+  //   the "places_changed" event specifically
 
   // Search box input and marker generation
   searchBox.addListener("places_changed", addMarker);
 
   function addMarker() {
 
-      // Google function to return auto-search locations
-      var places = searchBox.getPlaces();
+    // Google function to return auto-search locations
+    var places = searchBox.getPlaces();
 
-      // Error checking incase something doesn't work
-      if (!places) {
-        alert("Search failed: please try your search again");
-        return;
-      }
+    // Error checking incase something doesn't work
+    if (!places) {
+      alert("Search failed: please try your search again");
+      return;
+    }
 
-      // Error checking incase an empty value is returned
-      if (places.length === 0) {
-        alert("No search Results, please try again");
-        return;
-      }
+    // Error checking incase an empty value is returned
+    if (places.length === 0) {
+      alert("No search Results, please try again");
+      return;
+    }
 
-      var id = 0;
+    // Sets markers down for each place found, including when multiple places are found
+    places.forEach(function(place) {
 
-      // Sets markers down for each place found, including when multiple places are found
-      places.forEach(function(place) {
+      // Push marker through Marker constructor
+      var marker = new viewModel.Marker(place.name, place.geometry.location);
 
-        id+=1;
+      // Add new marker to the observable array
+      viewModel.markerList.push(marker);
 
-        // Push marker through Marker constructor
-        var marker = new viewModel.Marker(place.name, place.geometry.location, id);
+      // Set new marker listener functionality
+      defaultMarkerListener(marker);
+    });
 
-        // Add new marker to the observable array
-        viewModel.markerList.push(marker);
+    // Call fourSquare API function
+    setFoursquareUrl(viewModel.markerList().length);
 
-        // Set new marker listener functionality
-        defaultMarkerListener(marker);
-      });
-
-      // Call fourSquare API function
-      setFoursquareUrl(viewModel.markerList().length);
-
-      // Reset search text via observable
-      viewModel.searchActive("");
+    // Reset search text via observable
+    viewModel.searchActive("");
   }
 
   // Function to create custom marker icons (currently includes: defaultMarker and highlightedMarker)
@@ -302,7 +276,7 @@ function initMap() {
       new google.maps.Point(0, 0),
       new google.maps.Point(10, 34),
       new google.maps.Size(21, 34)
-      );
+    );
     return markerImage;
   }
 
@@ -324,51 +298,30 @@ function initMap() {
 
     var i = viewModel.markerList().length - 1;
 
-    // Only create one URL when adding a new marker
-    if (length) {
+    // Create multiple URLs when creating multiple markers
+    for (var j = 0; j <= i; j++) {
 
       foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
-                      "?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +        // If these don't work, replace website URL
-                      "&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +    // on foursquare app to generate new codes
-                      "&v=20130815" +
-                      "&limit=1" +
-                      "&radius=1000" +
-                      "&intent=checkin" +
-                      "&ll=" + viewModel.markerList()[i].getPosition().lat() + "," + viewModel.markerList()[i].getPosition().lng() +
-                      "&query=" + viewModel.markerList()[i].title;
+        "?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" + // If these don't work, replace website URL
+        "&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" + // on foursquare app to generate new codes
+        "&v=20130815" +
+        "&limit=1" +
+        "&radius=1000" +
+        "&intent=checkin" +
+        "&ll=" + viewModel.markerList()[j].getPosition().lat() + "," + viewModel.markerList()[j].getPosition().lng() +
+        "&query=" + viewModel.markerList()[j].title;
 
       // Send completed URL to ajax call
-      ajax(foursquareUrl, i);
-
-    } else {
-
-      // Create multiple URLs when creating multiple markers
-      for (var j = 0; j <= i; j++) {
-
-        foursquareUrl = "https://api.foursquare.com/v2/venues/search" +
-                        "?client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +        // If these don't work, replace website URL
-                        "&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK" +    // on foursquare app to generate new codes
-                        "&v=20130815" +
-                        "&limit=1" +
-                        "&radius=1000" +
-                        "&intent=checkin" +
-                        "&ll=" + viewModel.markerList()[j].getPosition().lat() + "," + viewModel.markerList()[j].getPosition().lng() +
-                        "&query=" + viewModel.markerList()[j].title;
-
-        // Send completed URLs to ajax call
-        ajax(foursquareUrl, j);
-      }
+      ajax(foursquareUrl, j);
     }
-
   }
-
 
   // AJAX request to foursquare API for image and link information, when available
   function ajax(FS_url, index) {
 
     $.ajax({
-        url: FS_url,
-        dataType: "jsonp"
+      url: FS_url,
+      dataType: "jsonp"
 
     }).done(function(response) {
 
@@ -383,13 +336,13 @@ function initMap() {
       }, 3000);
 
       // Create image URL request based on current marker location
-      var foursquarePhotoUrl =   "https://api.foursquare.com/v2/venues/" +
-                    response.response.venues[0].id +
-                    "/photos" +
-                    "?v=20130815" +
-                    "&limit=1" +
-                    "&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
-                    "&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
+      var foursquarePhotoUrl = "https://api.foursquare.com/v2/venues/" +
+        response.response.venues[0].id +
+        "/photos" +
+        "?v=20130815" +
+        "&limit=1" +
+        "&client_id=0PZDERVZX2X0G0I542Y1USL1UQUFVPATWVPGSLEZZ4H1E3QU" +
+        "&client_secret=1OGYRAXRUWB1KZO4QSMB5G5F0HS2WYUCWKJMRVVVWDPIJGXK";
 
       // Set obs array .FS_url properties to the website URL supplied by Foursquare
       var webUrl = response.response.venues[0].url;
@@ -403,10 +356,10 @@ function initMap() {
       }).done(function(photoResponse) {
 
         // If a photo is found, set its URL, and resize to 125x125 pixels
-        if(photoResponse.response.photos.items.length === 1) {
+        if (photoResponse.response.photos.items.length === 1) {
           var photo = photoResponse.response.photos.items[0].prefix +
-                "125x125" +
-                photoResponse.response.photos.items[0].suffix;
+            "125x125" +
+            photoResponse.response.photos.items[0].suffix;
 
           // Set obs array .FS_url_image value to photo source
           viewModel.markerList()[index].FS_url_image = photo;
@@ -415,18 +368,18 @@ function initMap() {
         // Clear timeout, since AJAX call finished successfully
         clearTimeout(timeoutTest);
 
-      // Notify user if an error occurs
+        // Notify user if an error occurs
       }).fail(function() {
         alert("A problem occurred, please try your request again.");
       });
 
     }).fail(function() {
-        alert("A problem occurred, please try your request again.");
+      alert("A problem occurred, please try your request again.");
     });
   }
 
   // Initialize foursquare data for preset markers
-  setFoursquareUrl();
+  setFoursquareUrl(viewModel.markerList().length);
 
   // Apply KO.js
   ko.applyBindings(viewModel);
@@ -443,13 +396,13 @@ function googleError() {
 function populateInfoWindow(marker) {
 
   var infowindow,
-      image = marker.FS_url_image,
-      url = marker.FS_url,
-      title = marker.title;
+    image = marker.FS_url_image,
+    url = marker.FS_url,
+    title = marker.title;
 
   // Check if the infoWindow is already open
-  if(marker.infowindow) {
-      marker.infowindow.close();
+  if (marker.infowindow) {
+    marker.infowindow.close();
   }
 
   for (var j = 0; j < viewModel.markerList().length; j++) {
@@ -458,39 +411,39 @@ function populateInfoWindow(marker) {
     }
   }
 
-    // Adjust infoWindow content depending on what data foursquare returns
-    var contentDiv =  '<div class="infoWindow">';
-    if(image && url) {
-      contentDiv +=   '<h3><a href="'+ url +'">'+ marker.title +'</a></h3>' +
-                      '<a href="'+ url +'"><img width="125" alt="'+ marker.title +'"src="'+ image +'"/></a>' +
-                      '</div>';
-    } else if (image && !url) {
-      contentDiv +=   '<h3>'+ marker.title +'</h3>' +
-                      '<img width="125" alt="'+ marker.title +'"src="'+ image +'"/>' +
-                      '</div>';
-    } else if (!image && url) {
-      contentDiv +=   '<a href="'+ url +'"><h3>'+ marker.title +'</h3></a>' +
-                      '</div>';
-    } else {
-      contentDiv +=   '<h3>'+ marker.title +'</h3>' +
-                      '</div>';
+  // Adjust infoWindow content depending on what data foursquare returns
+  var contentDiv = '<div class="infoWindow">';
+  if (image && url) {
+    contentDiv += '<h3><a href="' + url + '">' + marker.title + '</a></h3>' +
+      '<a href="' + url + '"><img width="125" alt="' + marker.title + '"src="' + image + '"/></a>' +
+      '</div>';
+  } else if (image && !url) {
+    contentDiv += '<h3>' + marker.title + '</h3>' +
+      '<img width="125" alt="' + marker.title + '"src="' + image + '"/>' +
+      '</div>';
+  } else if (!image && url) {
+    contentDiv += '<a href="' + url + '"><h3>' + marker.title + '</h3></a>' +
+      '</div>';
+  } else {
+    contentDiv += '<h3>' + marker.title + '</h3>' +
+      '</div>';
+  }
+
+  // Set infoWindow content and open it
+  infowindow = new google.maps.InfoWindow();
+  infowindow.setContent(contentDiv);
+  infowindow.open(map, marker);
+
+  // Activate Google Map's default close function for the infoWindow
+  infowindow.addListener('closeclick', function() {
+    infowindow.marker = null;
+  });
+
+  for (var i = 0; i < viewModel.markerList().length; i++) {
+    if (viewModel.markerList()[i].title == title.toString()) {
+      viewModel.markerList()[i].infowindow = infowindow;
     }
-
-    // Set infoWindow content and open it
-    infowindow = new google.maps.InfoWindow();
-    infowindow.setContent( contentDiv );
-    infowindow.open(map, marker);
-
-    // Activate Google Map's default close function for the infoWindow
-    infowindow.addListener('closeclick', function() {
-      infowindow.marker = null;
-    });
-
-    for (var i = 0; i < viewModel.markerList().length; i++) {
-      if (viewModel.markerList()[i].title == title.toString()) {
-        viewModel.markerList()[i].infowindow = infowindow;
-      }
-    }
+  }
 }
 
 
@@ -498,106 +451,106 @@ function populateInfoWindow(marker) {
 
 
 // Set this function outside of the eventListener incase any other function would use it later
-  function zoomToFilter() {
+function zoomToFilter() {
 
   // Initialize the geocoder.
-    var geocoder = new google.maps.Geocoder();
+  var geocoder = new google.maps.Geocoder();
 
-    // Get the address or place that the user entered.
-    var address = filter.value;
+  // Get the address or place that the user entered.
+  var address = filter.value;
 
-    // Make sure the address isn't blank.
-    if (address === '') {
-      window.alert('You must enter a place, or address.');
-    } else {
+  // Make sure the address isn't blank.
+  if (address === '') {
+    window.alert('You must enter a place, or address.');
+  } else {
 
-      // Geocode the address/area entered to get the center. Then, center the map
-      // on it and zoom in
-      geocoder.geocode(
-        { address: address,
-          bounds: map.getBounds(),
-          region: "Bucks County, PA"
-        }, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            var centerPoint = results[0].geometry.location;
-            applyFilter(centerPoint);
-            map.setZoom(12);
-          } else {
-            window.alert('We could not find that location - try entering a more' +
-            ' specific place.');
-        }
-      });
-    }
+    // Geocode the address/area entered to get the center. Then, center the map
+    // on it and zoom in
+    geocoder.geocode({
+      address: address,
+      bounds: map.getBounds(),
+      region: "Bucks County, PA"
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var centerPoint = results[0].geometry.location;
+        applyFilter(centerPoint);
+        map.setZoom(12);
+      } else {
+        window.alert('We could not find that location - try entering a more' +
+          ' specific place.');
+      }
+    });
   }
+}
 
 // This draws a circle over the map, and removes outlying markers and their corresponding li elements
-  function applyFilter(centerPoint) {
+function applyFilter(centerPoint) {
 
-    // Defines the circle to use as a visual for the filter
-    activeFilter = new google.maps.Circle({
-      strokeColor: '#D190D4',
-      strokeOpacity: 0.6,
-      strokeWeight: 2,
-      fillColor: '#D190D4',
-      fillOpacity: 0.15,
-      map: map,
-      center: centerPoint,
-      radius: parseInt(filterRadius.value) * 1609.34
-    });
+  // Defines the circle to use as a visual for the filter
+  activeFilter = new google.maps.Circle({
+    strokeColor: '#D190D4',
+    strokeOpacity: 0.6,
+    strokeWeight: 2,
+    fillColor: '#D190D4',
+    fillOpacity: 0.15,
+    map: map,
+    center: centerPoint,
+    radius: parseInt(filterRadius.value) * 1609.34
+  });
 
-    var currentLength = viewModel.markerList().length;
-    var filterRemoveArray = [];
+  var currentLength = viewModel.markerList().length;
+  var filterRemoveArray = [];
 
-    // Checks the distance between the Circle's origin point and the marker locations
-    for (var i = 0; i < currentLength; i++) {
+  // Checks the distance between the Circle's origin point and the marker locations
+  for (var i = 0; i < currentLength; i++) {
 
-      var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.markerList()[i].position, centerPoint);
 
-      // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
-      if (distance > activeFilter.radius) {
-        viewModel.markerList()[i].setMap(null);
-        filterRemoveArray.push(viewModel.markerList()[i]);
-      }
+    // Removes overlying markers from the map and pushes them into the fitlerRemoveArray for deletion
+    if (distance > activeFilter.radius) {
+      viewModel.markerList()[i].setMap(null);
+      filterRemoveArray.push(viewModel.markerList()[i]);
     }
-
-    var currentFilteredLength = filterRemoveArray.length;
-
-    // Uses the removeButton function to completely clear out the filtered markers
-    for (var ii = 0; ii < currentFilteredLength; ii++) {
-      removeButton(filterRemoveArray[ii]);
-    }
-
-    // Resets the filtered array for next time :P
-    filterRemoveArray = [];
-
-    // Sets the state for the filter being active, and disables the ability to add another filter
-    viewModel.filter(true);
-    viewModel.searchEnable(false);
-
-    search.value = "Clear filter to use";
-    filterRadius.value = parseInt(filterRadius.value) + " miles";
-
   }
+
+  var currentFilteredLength = filterRemoveArray.length;
+
+  // Uses the removeButton function to completely clear out the filtered markers
+  for (var ii = 0; ii < currentFilteredLength; ii++) {
+    removeButton(filterRemoveArray[ii]);
+  }
+
+  // Resets the filtered array for next time :P
+  filterRemoveArray = [];
+
+  // Sets the state for the filter being active, and disables the ability to add another filter
+  viewModel.filter(true);
+  viewModel.searchEnable(false);
+
+  search.value = "Clear filter to use";
+  filterRadius.value = parseInt(filterRadius.value) + " miles";
+
+}
 
 
 // Enables the removeFilter button
-  function removeFilter() {
+function removeFilter() {
 
-      if(activeFilter) {
-        activeFilter.setMap(null);
-      }
-      // Google Maps recommends doing this to completely remove the overlay
-      activeFilter = null;
-
-      filter.value = "";
-      filterRadius.value = "";
-      search.value = "";
-
-      // Set ko.js states to disable filter elements
-      viewModel.filter(false);
-      viewModel.searchEnable(true);
+  if (activeFilter) {
+    activeFilter.setMap(null);
   }
+  // Google Maps recommends doing this to completely remove the overlay
+  activeFilter = null;
+
+  filter.value = "";
+  filterRadius.value = "";
+  search.value = "";
+
+  // Set ko.js states to disable filter elements
+  viewModel.filter(false);
+  viewModel.searchEnable(true);
+}
 
 // Make Google and foursquare attribution text disappear if clicked
 $(".attribution").click(function() {
@@ -611,32 +564,34 @@ setTimeout(function() {
 
 // This custom ko.handler tracks and adjusts the side_bar and top_bar animations depending on screen size and orientation
 ko.bindingHandlers.toggleClick = {
-  init: function (element, valueAccessor) {
+  init: function(element, valueAccessor) {
     var value = viewModel.navToggleBool();
 
     // Set default shift value for animation positions
     var shift = -20;
 
     // On small screens and medium mobile screens in portrait, start shift at position 0
-    if (window.matchMedia('(max-width: 750px)').matches)
-      { shift = 0; }
-    if (window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches)
-      { shift = 0; }
+    if (window.matchMedia('(max-width: 750px)').matches) {
+      shift = 0;
+    }
+    if (window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches) {
+      shift = 0;
+    }
 
     // Set click handler based on toggleClick value
-    ko.utils.registerEventHandler(element, "click", function () {
+    ko.utils.registerEventHandler(element, "click", function() {
 
       // Template animate functions, using shift as the position variable
       $("#side_bar").animate({
-          left: shift + "vw",
-        }, 350);
+        left: shift + "vw",
+      }, 350);
       $("#top_bar").animate({
-          left: shift + "vw",
-        }, 350);
+        left: shift + "vw",
+      }, 350);
 
       // Small screen adjustment
       if (shift === 60) {
-        setTimeout(function(){
+        setTimeout(function() {
           $("#top_bar").css("width", "40vw");
         }, 400);
         viewModel.mobileScroll(false);
@@ -648,29 +603,35 @@ ko.bindingHandlers.toggleClick = {
       viewModel.navToggleBool(!viewModel.navToggleBool());
 
       // Check if click has been triggered yet or not
-      if (!viewModel.navToggleBool())   { shift = 0;}
+      if (!viewModel.navToggleBool()) {
+        shift = 0;
+      }
 
       // Small screen shift variable controller
-      else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 750px)').matches)
-                                        { shift = 60;
-                                          setTimeout(function() {
-                                            viewModel.mobileScroll(true);
-                                          }, 300);
-                                        }
+      else if (viewModel.navToggleBool() && window.matchMedia('(max-width: 750px)').matches) {
+        shift = 60;
+        setTimeout(function() {
+          viewModel.mobileScroll(true);
+        }, 300);
+      }
 
       // Mid-sized mobile screen, and mobile screen in portrait, adjustments
       else if (viewModel.navToggleBool() && window.matchMedia('(min-width: 751px) and (max-width: 1150px), (orientation: portrait)').matches) {
-                                        { shift = -30; }
+        {
+          shift = -30;
+        }
       }
       // Default shift value adjustment
-      else                              { shift = -20; }
+      else {
+        shift = -20;
+      }
     });
   }
 };
 
 function listItemSelection(item) {
 
-  for(var i = 0; i < viewModel.markerList().length; i++) {
+  for (var i = 0; i < viewModel.markerList().length; i++) {
 
     viewModel.markerList()[i].setIcon(defaultIcon);
     viewModel.markerList()[i].colorId(false);
@@ -702,7 +663,7 @@ var viewModel = {
   Marker: function(title, location, id) {
     var self = this;
 
-    var marker =  new google.maps.Marker({
+    var marker = new google.maps.Marker({
       map: map,
       title: title,
       position: location,
@@ -710,8 +671,7 @@ var viewModel = {
       animation: google.maps.Animation.DROP,
       colorId: ko.observable(false),
       activeButton: ko.observable(false),
-      customLatLng: location,
-      id: ko.observable(id)
+      customLatLng: location
     });
 
     return marker;
@@ -733,11 +693,11 @@ var viewModel = {
   filterRadiusInput: ko.observable(),
 
   // This checks if the user has input anything into both the filter searchBox and the filter Radius box
-  filterReady: ko.pureComputed(function(){
+  filterReady: ko.pureComputed(function() {
     if (!viewModel.filterSearchInput() || !viewModel.filterRadiusInput()) {
       return false;
     }
-    if ( viewModel.filterSearchInput().length && viewModel.filterRadiusInput()) {
+    if (viewModel.filterSearchInput().length && viewModel.filterRadiusInput()) {
       return true;
     } else {
       return false;
@@ -745,6 +705,3 @@ var viewModel = {
   })
 
 };
-
-// Apply KO.js
-// ko.applyBindings(viewModel);
